@@ -1,0 +1,29 @@
+{
+  "name": "4Dollar-Deffense-Server",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "repository": "https://github.com/artbiit/4Dollar-Deffense-Server",
+  "author": "ljs <artbiit@naver.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "eslint": "^9.14.0",
+    "ioredis": "^5.4.1",
+    "lodash": "^4.17.21",
+    "long": "^5.2.3",
+    "mysql2": "^3.11.3",
+    "protobufjs": "^7.4.0",
+    "uuid": "^10.0.0",
+    "winston": "^3.15.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "type": "module"
+}
