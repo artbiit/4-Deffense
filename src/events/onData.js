@@ -22,7 +22,9 @@ export const onData = (socket) => async (data) => {
       PACKET_VERSION_LENGTH
     );
     let offset = PACKET_TYPE_LENGTH + PACKET_VERSION_LENGTH;
-    const version = socket.buffer.subarray(offset, offset + versionLength);
+    const version = socket.buffer
+      .subarray(offset, offset + versionLength)
+      .toString();
     offset += versionLength;
     const sequence = socket.buffer.readUintBE(offset, PACKET_SEQUENCE_LENGTH);
     offset += PACKET_SEQUENCE_LENGTH;
@@ -34,7 +36,7 @@ export const onData = (socket) => async (data) => {
 
     const requiredLength = offset + payloadLength;
 
-    while (socket.buffer.length >= payloadLength) {
+    if (socket.buffer.length >= requiredLength) {
       const payloadData = socket.buffer.subarray(offset, requiredLength);
       socket.buffer = socket.buffer.subarray(requiredLength);
 
@@ -55,6 +57,8 @@ export const onData = (socket) => async (data) => {
           socket.write(response);
         }
       }
+    } else {
+      break;
     }
   }
 };
