@@ -10,7 +10,7 @@ const {
   PACKET_VERSION_LENGTH,
   PACKET_SEQUENCE_LENGTH,
   PACKET_PAYLOAD_LENGTH,
-} = configs.env;
+} = configs;
 
 export const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);
