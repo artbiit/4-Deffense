@@ -1,4 +1,7 @@
-import { RESPONSE_SUCCESS_CODE } from "../constants/handlerIds.js";
+import {
+  RESPONSE_SUCCESS_CODE,
+  GlobalFailCode,
+} from "../constants/handlerIds.js";
 import {
   PACKET_TYPE_LENGTH,
   PACKET_PAYLOAD_LENGTH,
@@ -10,6 +13,7 @@ import { CLIENT_VERSIONS } from "../constants/constants.js";
 import env from "../constants/env.js";
 
 const configs = {
+  GlobalFailCode,
   RESPONSE_SUCCESS_CODE,
   CLIENT_VERSIONS,
   PACKET_TYPE_LENGTH,
