@@ -11,6 +11,16 @@ const requiredEnv = {
   SERVER: ["PORT", "BIND"],
   REDIS: ["HOST", "PORT", "PASSWORD"],
   GAME: ["MAX_PLAYER"],
+  JWT: [
+    "SECRET",
+    "EXPIRES_IN",
+    "ALGORITHM",
+    "ISSUER",
+    "AUDIENCE",
+    "REFRESH_SECRET",
+    "REFRESH_EXPIRES_IN",
+    "ALGORITHM",
+  ],
 };
 
 /**
