@@ -2,90 +2,90 @@ import configs from "../configs/configs.js";
 import CustomError from "../utils/error/customError.js";
 import { ErrorCodes } from "../utils/error/errorCodes.js";
 
-const { PACKET_TYPE } = configs;
+const { PacketType } = configs;
 
 const handlers = {
-  [PACKET_TYPE.REGISTER_REQUEST]: {
+  [PacketType.REGISTER_REQUEST]: {
     handler: undefined,
     protoType: "C2SRegisterRequest",
   },
-  [PACKET_TYPE.REGISTER_RESPONSE]: {
+  [PacketType.REGISTER_RESPONSE]: {
     handler: undefined,
     protoType: "S2CRegisterResponse",
   },
-  [PACKET_TYPE.LOGIN_REQUEST]: {
+  [PacketType.LOGIN_REQUEST]: {
     handler: undefined,
     protoType: "C2SLoginRequest",
   },
-  [PACKET_TYPE.LOGIN_RESPONSE]: {
+  [PacketType.LOGIN_RESPONSE]: {
     handler: undefined,
     protoType: "S2CLoginResponse",
   },
-  [PACKET_TYPE.MATCH_REQUEST]: {
+  [PacketType.MATCH_REQUEST]: {
     handler: undefined,
     protoType: "C2SMatchRequest",
   },
-  [PACKET_TYPE.MATCH_START_NOTIFICATION]: {
+  [PacketType.MATCH_START_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CMatchStartNotification",
   },
-  [PACKET_TYPE.STATE_SYNC_NOTIFICATION]: {
+  [PacketType.STATE_SYNC_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CStateSyncNotification",
   },
-  [PACKET_TYPE.TOWER_PURCHASE_REQUEST]: {
+  [PacketType.TOWER_PURCHASE_REQUEST]: {
     handler: undefined,
     protoType: "C2STowerPurchaseRequest",
   },
-  [PACKET_TYPE.TOWER_PURCHASE_RESPONSE]: {
+  [PacketType.TOWER_PURCHASE_RESPONSE]: {
     handler: undefined,
     protoType: "S2CTowerPurchaseResponse",
   },
-  [PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION]: {
+  [PacketType.ADD_ENEMY_TOWER_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CAddEnemyTowerNotification",
   },
-  [PACKET_TYPE.SPAWN_MONSTER_REQUEST]: {
+  [PacketType.SPAWN_MONSTER_REQUEST]: {
     handler: undefined,
     protoType: "C2SSpawnMonsterRequest",
   },
-  [PACKET_TYPE.SPAWN_MONSTER_RESPONSE]: {
+  [PacketType.SPAWN_MONSTER_RESPONSE]: {
     handler: undefined,
     protoType: "S2CSpawnMonsterResponse",
   },
-  [PACKET_TYPE.SPAWN_ENEMY_MONSTER_NOTIFICATION]: {
+  [PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CSpawnEnemyMonsterNotification",
   },
-  [PACKET_TYPE.TOWER_ATTACK_REQUEST]: {
+  [PacketType.TOWER_ATTACK_REQUEST]: {
     handler: undefined,
     protoType: "C2STowerAttackRequest",
   },
-  [PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
+  [PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CEnemyTowerAttackNotification",
   },
-  [PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST]: {
+  [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
     handler: undefined,
     protoType: "C2SMonsterAttackBaseRequest",
   },
-  [PACKET_TYPE.UPDATE_BASE_HP_NOTIFICATION]: {
+  [PacketType.UPDATE_BASE_HP_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CUpdateBaseHPNotification",
   },
-  [PACKET_TYPE.GAME_OVER_NOTIFICATION]: {
+  [PacketType.GAME_OVER_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CGameOverNotification",
   },
-  [PACKET_TYPE.GAME_END_REQUEST]: {
+  [PacketType.GAME_END_REQUEST]: {
     handler: undefined,
     protoType: "C2SGameEndRequest",
   },
-  [PACKET_TYPE.MONSTER_DEATH_NOTIFICATION]: {
+  [PacketType.MONSTER_DEATH_NOTIFICATION]: {
     handler: undefined,
     protoType: "C2SMonsterDeathNotification",
   },
-  [PACKET_TYPE.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
+  [PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CEnemyMonsterDeathNotification",
   },

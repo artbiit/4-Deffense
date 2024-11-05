@@ -7,7 +7,7 @@ import {
   PACKET_PAYLOAD_LENGTH,
   PACKET_SEQUENCE_LENGTH,
   PACKET_VERSION_LENGTH,
-  PACKET_TYPE,
+  PacketType,
 } from "../constants/header.js";
 import { CLIENT_VERSIONS } from "../constants/constants.js";
 import env from "../constants/env.js";
@@ -25,7 +25,7 @@ const configs = {
     PACKET_PAYLOAD_LENGTH +
     PACKET_SEQUENCE_LENGTH +
     PACKET_VERSION_LENGTH,
-  PACKET_TYPE,
+  PacketType,
   ...env,
 };
 

@@ -1,5 +1,6 @@
 import configs from "../configs/configs.js";
 import { getHandlerById } from "../handlers/index.js";
+import { getUserBySocket } from "../session/user.session.js";
 import { handleError } from "../utils/error/errorHandler.js";
 import { packetParser } from "../utils/parser/packetParser.js";
 import { createResponse } from "../utils/response/createResponse.js";
@@ -51,8 +52,8 @@ export const onData = (socket) => async (data) => {
         if (result) {
           const response = createResponse(
             packetType,
-            result.responseCode,
-            result.payload
+            getUserBySocket(socket),
+            result
           );
           socket.write(response);
         }
