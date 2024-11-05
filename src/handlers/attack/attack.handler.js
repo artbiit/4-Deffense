@@ -59,10 +59,9 @@ const towerAttackRequestHandler = ({ socket, payload }) => {
     // 추후에 할것 있나?
     // 질문: HANDLER_IDS는 추가하지 않아도 되는것?
     const towerAttackResponse = createResponse(
-      HANDLER_IDS.TOWER_ATTACK,
       RESPONSE_SUCCESS_CODE,
+      user,
       { message: `타워가 몬스터에게 성공적으로 공격했습니다.` },
-      user.id
     );
     socket.write(towerAttackResponse);
   } catch (error) {
@@ -71,3 +70,5 @@ const towerAttackRequestHandler = ({ socket, payload }) => {
 };
 
 export default towerAttackRequestHandler;
+
+// 필요한것. monster, tower 객체
