@@ -43,7 +43,13 @@ export const onData = (socket) => async (data) => {
 
       let result = null;
       try {
-        const payload = packetParser(payloadData);
+        const payload = packetParser(
+          socket,
+          packetType,
+          version,
+          sequence,
+          payloadData
+        );
         const handler = getHandlerById(packetType);
         result = await handler({ socket, payload });
       } catch (error) {
@@ -51,9 +57,9 @@ export const onData = (socket) => async (data) => {
       } finally {
         if (result) {
           const response = createResponse(
-            packetType,
+            result.responseType,
             getUserBySocket(socket),
-            result
+            result.payload
           );
           socket.write(response);
         }

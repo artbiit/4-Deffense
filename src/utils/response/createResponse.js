@@ -10,7 +10,7 @@ const {
   CLIENT_VERSIONS,
 } = configs;
 
-export const createResponse = (responseType, user, result) => {
+export const createResponse = (responseType, user, data = {}) => {
   const packetTypeBuffer = Buffer.alloc(PACKET_TYPE_LENGTH);
   packetTypeBuffer.writeUintBE(responseType, 0, PACKET_TYPE_LENGTH);
 
@@ -36,7 +36,6 @@ export const createResponse = (responseType, user, result) => {
   const payloadMessage =
     protoMessages[getProtoTypeNameByHandlerId(responseType)];
 
-  const data = result.data || {};
   const payloadBuffer = payloadMessage.encode(data).finish();
 
   const payloadLengthBuffer = Buffer.alloc(PACKET_PAYLOAD_LENGTH);

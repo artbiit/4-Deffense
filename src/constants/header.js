@@ -43,3 +43,7 @@ export const PacketType = {
   MONSTER_DEATH_NOTIFICATION: 20,
   ENEMY_MONSTER_DEATH_NOTIFICATION: 21,
 };
+
+export const ReversePacketType = Object.fromEntries(
+  Object.entries(PacketType).map(([key, value]) => [value, key])
+);
