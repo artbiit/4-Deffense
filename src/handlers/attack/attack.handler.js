@@ -12,7 +12,7 @@ import { createResponse } from "../../utils/response/createResponse.js";
 // 클라에서의 대미지 공식
 //  var result = dmg - data.def;
 //  nowHp -= result;
-const towerAttackRequestHandler = ({ socket, payload }) => {
+export const towerAttackRequestHandler = ({ socket, payload }) => {
   try {
     // 1. payload에 있는 monsterId 와 towerId를 빼낸다.
     const { monsterId, towerId } = payload;
@@ -58,17 +58,44 @@ const towerAttackRequestHandler = ({ socket, payload }) => {
     // 여기까지 타워가 몬스터에게 대미지를 입힌다. 까지 완료
     // 추후에 할것 있나?
     // 질문: HANDLER_IDS는 추가하지 않아도 되는것?
-    const towerAttackResponse = createResponse(
-      RESPONSE_SUCCESS_CODE,
-      user,
-      { message: `타워가 몬스터에게 성공적으로 공격했습니다.` },
-    );
+    const towerAttackResponse = createResponse(RESPONSE_SUCCESS_CODE, user, {
+      message: `타워가 몬스터에게 성공적으로 공격했습니다.`,
+    });
     socket.write(towerAttackResponse);
   } catch (error) {
     handleError(error);
   }
 };
 
-export default towerAttackRequestHandler;
+// 클라에 보니깐 base 객체가 따로 없다.
+// 클라의 GameManager에 homehp로 표현되어있고, 클라의 몬스터 attack에 직접적으로 base의 체력을 깎는 코드는 없음.
+// 몬스터가 base에 도달하면 대미지 주고 remove되고 있음. 하지만 remove될때 서버에 보내는건 없음.
+export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
+  try {
+    // 1. payload에 있는 damage를 빼낸다.
+    const { damage } = payload;
+
+    // 2. usersession에 socket으로 user를 찾는다.
+    const user = getUserBySocket(socket);
+
+    // 찾은 유저가 없다. 에러
+    if (!user) {
+      throw new CustomError(
+        ErrorCodes.USER_NOT_FOUND,
+        "유저를 찾을 수 없습니다.by towerAttackRequestHandler"
+      );
+    }
+    user.damage(damage);
+
+    // 여기까지 몬스터가 base에게 대미지를 주었다. 완료.
+    // 추후에 할것 있나?
+    const monsterAttackResponse = createResponse(RESPONSE_SUCCESS_CODE, user, {
+      message: `몬스터가 베이스에게 성공적으로 공격했습니다.`,
+    });
+    socket.write(monsterAttackResponse);
+  } catch (error) {
+    handleError(error);
+  }
+};
 
 // 필요한것. monster, tower 객체
