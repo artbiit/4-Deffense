@@ -6,8 +6,9 @@ class Tower {
    */
   constructor(coords) {
     this.id = uuidv4();
-    
+
     this.x = coords.x;
     this.y = coords.y;
   }
 }
+export default Tower;
