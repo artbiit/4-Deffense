@@ -1,5 +1,5 @@
 import IntervalManager from "../managers/interval.manager.js";
-import base from '../../../assets/base.json';
+
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -49,6 +49,9 @@ class Game {
     });
     return maxLatency;
   }
+
+  getTower(userId, towerId){}
+  getMonster(userId, monsterId){}
 
   startGame() {}
 
