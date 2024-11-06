@@ -1,4 +1,5 @@
 import IntervalManager from "../managers/interval.manager.js";
+import base from '../../../assets/base.json';
 // import {
 //   createLocationPacket,
 //   gameStartNotification,

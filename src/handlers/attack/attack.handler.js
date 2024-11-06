@@ -1,9 +1,9 @@
-import { RESPONSE_SUCCESS_CODE } from "../../constants/handlerIds.js";
-import { getUserBySocket } from "../../session/user.session.js";
-import CustomError from "../../utils/error/customError.js";
-import { ErrorCodes } from "../../utils/error/errorCodes.js";
-import { handleError } from "../../utils/error/errorHandler.js";
-import { createResponse } from "../../utils/response/createResponse.js";
+import { RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
+import { getUserBySocket } from '../../session/user.session.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { handleError } from '../../utils/error/errorHandler.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 // 클라에서 대미지를 깎고 monsterId와 towerId를 담아서 보냄.
 // 그럼 towerId로 tower를 찾아서 해당 타워의 공격력을 바탕으로
@@ -17,37 +17,40 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     // 1. payload에 있는 monsterId 와 towerId를 빼낸다.
     const { monsterId, towerId } = payload;
 
-    // 2. usersession에 socket으로 user를 찾는다. ( 질문 : tower와 monster는 유저에 넣을것인가 game에 넣을것인가?)
-    // user에 넣었다면? 해당 하는 유저가 자기소유의 몬스터와 타워를 가지고 있다.
-    // game에 넣었다면? 게임에서 참가중인 유저들을 들고 있고, 해당하는 유저를 찾아내서 사용 => 그럼 user가 들고있긴하겠네.
-    // user에 그럼 tower와 monster를 배열로 들고있다고 생각하자.
-    //
+    // 2. usersession에 socket으로 user를 찾는다.
     const user = getUserBySocket(socket);
-
-    // 찾은 유저가 없다. 에러
     if (!user) {
       throw new CustomError(
         ErrorCodes.USER_NOT_FOUND,
-        "유저를 찾을 수 없습니다.by towerAttackRequestHandler"
+        '유저를 찾을 수 없습니다.by towerAttackRequestHandler',
       );
     }
 
-    // 3. 찾아낸 user에 monsterId 와 towerId로 해당하는 타워와 몬스터를 찾아낸다.
-    const monster = user.findMonster(monsterId);
-    const tower = user.findTower(towerId);
+    // 3. 유저로 게임을 찾는다
+    const game = getGameSessionByUser(user);
+    if (!game) {
+      throw new CustomError(
+        ErrorCodes.GAME_NOT_FOUND,
+        '게임을 찾을 수 없습니다. by towerAttackRequestHandler',
+      );
+    }
+
+    // 4. 찾아낸 userId, monsterId 와 towerId로 해당하는 타워와 몬스터를 찾아낸다.
+    const monster = game.getMonster(user.id, monsterId);
+    const tower = game.getTower(user.id, towerId);
 
     // 찾은 몬스터가 없다. 에러?
     if (!monster) {
       throw new CustomError(
         ErrorCodes.MISSING_FIELDS,
-        "해당하는 몬스터를 찾을 수 없습니다.by towerAttackRequestHandler"
+        '해당하는 몬스터를 찾을 수 없습니다.by towerAttackRequestHandler',
       );
     }
     // 찾은 타워가 없다. 에러?
     if (!tower) {
       throw new CustomError(
         ErrorCodes.MISSING_FIELDS,
-        "해당하는 타워를 찾을 수 없습니다.by towerAttackRequestHandler"
+        '해당하는 타워를 찾을 수 없습니다.by towerAttackRequestHandler',
       );
     }
 
@@ -82,10 +85,21 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     if (!user) {
       throw new CustomError(
         ErrorCodes.USER_NOT_FOUND,
-        "유저를 찾을 수 없습니다.by monsterAttackBaseRequestHandler"
+        '유저를 찾을 수 없습니다.by monsterAttackBaseRequestHandler',
       );
     }
-    user.damage(damage);
+
+    // 3. 유저로 게임을 찾는다
+    const game = getGameSessionByUser(user);
+    if (!game) {
+      throw new CustomError(
+        ErrorCodes.GAME_NOT_FOUND,
+        '게임을 찾을 수 없습니다. by monsterAttackBaseRequestHandler',
+      );
+    }
+
+    // userId와 damage로 base에 damage준다.
+    game.baseDamage(user.id, damage);
 
     // 여기까지 몬스터가 base에게 대미지를 주었다. 완료.
     // 추후에 할것 있나?
