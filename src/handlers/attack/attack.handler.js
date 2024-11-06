@@ -4,6 +4,8 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import monsterData from '../../../assets/monster.json';
+import towerData from '../../../assets/tower.json';
 
 // 클라에서 대미지를 깎고 monsterId와 towerId를 담아서 보냄.
 // 그럼 towerId로 tower를 찾아서 해당 타워의 공격력을 바탕으로
@@ -56,7 +58,22 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
 
     // 타워 공격력 - 몬스터 방어력
     // monster 클래스 내부에서 damage 입으면 방어력 빼는 계산을 할 것.
-    monster.damage(tower.getPower());
+
+    // 대미지 맞는지 검증?
+    // 클라에서 대미지가 넘어오는게 아니라 id로 넘어오는데 대미지 검증이 의미가 있나?
+    const monsterDef = monsterData.data.find((monster) => monster.id === monster.id).def;
+    const towerPower = towerData.data.find((tower) => tower.id === tower.id).Power;
+    const guessDamage = towerPower - monsterDef;
+    const realDamage = tower.getPower() - monster.getDef();
+
+    if(guessDamage !== realDamage){
+      throw new CustomError(
+        ErrorCodes.MISSING_FIELDS,
+        '대미지 계산이 서로 다릅니다.by towerAttackRequestHandler',
+      );
+    }
+
+    monster.damage(realDamage);
 
     // 여기까지 타워가 몬스터에게 대미지를 입힌다. 까지 완료
     // 추후에 할것 있나?
