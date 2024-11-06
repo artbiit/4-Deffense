@@ -1,3 +1,5 @@
+import { gamesJoinedbyUsers } from '../../session/sessions.js';
+import { getUserById } from '../../session/user.session.js';
 import IntervalManager from '../managers/interval.manager.js';
 // import {
 //   createLocationPacket,
@@ -18,7 +20,9 @@ class Game {
     if (this.users.length >= MAX_PLAYERS) {
       throw new Error('Game session is full');
     }
+
     this.users.push(user);
+    gamesJoinedbyUsers.set(user, this);
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === MAX_PLAYERS) {
@@ -34,6 +38,8 @@ class Game {
 
   removeUser(userId) {
     this.users = this.users.filter((user) => user.id !== userId);
+    const user = getUserById(userId);
+    gamesJoinedbyUsers.delete(user);
     this.intervalManager.removePlayer(userId);
 
     if (this.users.length < MAX_PLAYERS) {
