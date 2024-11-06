@@ -39,7 +39,7 @@ export const onData = (socket) => async (data) => {
         const handler = getHandlerById(packetType);
         result = await handler({ socket, payload });
       } catch (error) {
-        console.log(error);
+        console.error(error);
         result = handleError(packetType, error);
       } finally {
         if (result) {
