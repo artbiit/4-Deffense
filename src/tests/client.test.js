@@ -3,10 +3,8 @@ import { loadProtos, getProtoMessages } from '../init/loadProtos.js';
 import { getProtoTypeNameByHandlerId } from '../handlers/index.js';
 import configs from '../configs/configs.js';
 import { createResponse } from '../utils/response/createResponse.js';
+import { packetParser } from '../utils/parser/packetParser.js';
 await loadProtos();
-
-const protoMessages = getProtoMessages();
-const gamePacket = protoMessages.GamePacket;
 
 const {
   PACKET_TYPE_LENGTH,
@@ -14,30 +12,8 @@ const {
   PACKET_VERSION_LENGTH,
   PACKET_SEQUENCE_LENGTH,
   PACKET_PAYLOAD_LENGTH,
+  CLIENT_VERSIONS,
 } = configs;
-
-export const decodePayload = (packetType, payloadBuffer) => {
-  let decodedGamePacket = null;
-  try {
-    decodedGamePacket = gamePacket.decode(payloadBuffer);
-  } catch (error) {
-    console.error(error);
-    throw new Error(`패킷 디코딩 중 문제 발생 : GamePacket`);
-  }
-
-  // 핸들러 ID에 따라 적절한 payload 구조를 디코딩
-  const { namespace, typeName } = getProtoTypeNameByHandlerId(packetType);
-  const PayloadType = protoMessages[namespace][typeName];
-  let payload;
-  try {
-    payload = PayloadType.decode(decodedGamePacket.payload);
-  } catch (error) {
-    console.error(error);
-    throw new Error('패킷 구조가 일치하지 않습니다.');
-  }
-
-  return payload;
-};
 
 const connections = [];
 
@@ -123,8 +99,8 @@ class Client {
         const payloadData = this.buffer.subarray(offset, requiredLength);
         this.buffer = this.buffer.subarray(requiredLength);
 
-        const payload = decodePayload(packetType, payloadData);
-        const handler = this.#handlers(packetType);
+        const payload = packetParser(null, packetType, CLIENT_VERSIONS[0], sequence, payloadData);
+        const handler = this.#handlers[packetType];
 
         console.log(
           `수신[packetType:${packetType}]|[version:${version}]|[sequence:${sequence}]|\n`,
