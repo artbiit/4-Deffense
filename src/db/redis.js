@@ -1,6 +1,6 @@
-import configs from "../configs/configs.js";
-import Redis from "ioredis";
-import logger from "../utils/logger.js";
+import configs from '../configs/configs.js';
+import Redis from 'ioredis';
+import logger from '../utils/logger.js';
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = configs;
 
@@ -20,12 +20,12 @@ const connect = async () => {
       });
 
       // Redis 연결 실패 이벤트 핸들러
-      redis.on("error", (err) => {
+      redis.on('error', (err) => {
         logger.error(`Redis connection failed: ${err}`);
         redis = null; // 연결 실패 시 redis 객체를 null로 설정
       });
 
-      logger.info("redis connected");
+      logger.info('redis connected');
     } catch (e) {
       logger.error(`Redis connection failed, ${e}`);
       redis = null;
@@ -41,7 +41,7 @@ const connect = async () => {
  */
 const getRedis = async () => {
   if (redis === null) {
-    logger.warn("redis is null. It will try to connect");
+    logger.warn('redis is null. It will try to connect');
     await connect();
   }
 
