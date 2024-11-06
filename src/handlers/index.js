@@ -1,17 +1,18 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { registerRequestHandler, registerResponseHandler } from './register.handler.js';
 
 const { PacketType } = configs;
 
 const handlers = {
   [PacketType.REGISTER_REQUEST]: {
-    handler: undefined,
+    handler: registerRequestHandler,
     protoType: 'C2SRegisterRequest',
     fieldName: 'registerRequest',
   },
   [PacketType.REGISTER_RESPONSE]: {
-    handler: undefined,
+    handler: registerResponseHandler,
     protoType: 'S2CRegisterResponse',
     fieldName: 'registerResponse',
   },
