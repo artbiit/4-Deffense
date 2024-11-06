@@ -1,6 +1,6 @@
-import User from "../classes/models/user.class.js";
-import logger from "../utils/logger.js";
-import game from "../classes/models/game.class.js";
+import User from '../classes/models/user.class.js';
+import logger from '../utils/logger.js';
+import game from '../classes/models/game.class.js';
 
 export const userSessions = [];
 
