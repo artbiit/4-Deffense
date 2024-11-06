@@ -1,6 +1,7 @@
-import Result from "../../handlers/result.js";
-import logger from "../logger.js";
-import configs from "../../configs/configs.js";
+import Result from '../../handlers/result.js';
+import logger from '../logger.js';
+import configs from '../../configs/configs.js';
+import CustomError from './customError.js';
 
 const { GlobalFailCode } = configs;
 
@@ -10,7 +11,7 @@ const { GlobalFailCode } = configs;
 export const handleError = (error) => {
   let responseType;
   let message;
-  if (error.code) {
+  if (typeof error === CustomError) {
     responseType = error.code;
     message = error.message;
     logger.error(`에러 코드: ${error.code}, 메시지: ${error.message}`);
@@ -18,6 +19,6 @@ export const handleError = (error) => {
   } else {
     responseType = GlobalFailCode.UNKNOWN_ERROR;
     message = error.message;
-    logger.error(`일반 에러: ${error.message}`);
+    logger.error(`일반 에러: ${error}`);
   }
 };
