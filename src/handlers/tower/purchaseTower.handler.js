@@ -23,6 +23,9 @@ const purchaseTower = ({ socket, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_IN_GAME, '유저가 플레이중인 게임이 없습니다.');
     }
 
+    // INCOMPLETE: 타워 위치 (설치할 수 있는 곳인가? 다른 타워와 겹치는가?) 검증 필요
+    // INCOMPLETE: 골드가 충분한지 검증 필요
+
     const tower = new Tower({ x, y });
     gameSession.addTower(user, tower);
 
