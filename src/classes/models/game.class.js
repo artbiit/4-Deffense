@@ -14,6 +14,7 @@ class Game {
     this.users = [];
     this.intervalManager = new IntervalManager();
     this.state = 'waiting'; // 'waiting', 'inProgress'
+    this.towers = {};
   }
 
   addUser(user) {
@@ -23,6 +24,8 @@ class Game {
 
     this.users.push(user);
     gamesJoinedbyUsers.set(user, this);
+
+    this.towers[user] = [];
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === MAX_PLAYERS) {
@@ -40,11 +43,18 @@ class Game {
     this.users = this.users.filter((user) => user.id !== userId);
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
+
+    delete this.towers[user];
+
     this.intervalManager.removePlayer(userId);
 
     if (this.users.length < MAX_PLAYERS) {
       this.state = 'waiting';
     }
+  }
+
+  addTower(user, tower) {
+    this.towers[user].push(tower);
   }
 
   getMaxLatency() {
