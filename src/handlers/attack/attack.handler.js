@@ -5,6 +5,11 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { getGameAssets } from '../../init/loadAssets.js';
+import configs from '../../configs/configs.js';
+
+
+const { PacketType } = configs;
+
 
 // 클라에서 대미지를 깎고 monsterId와 towerId를 담아서 보냄.
 // 그럼 towerId로 tower를 찾아서 해당 타워의 공격력을 바탕으로
@@ -84,7 +89,7 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     });
     socket.write(towerAttackResponse);
   } catch (error) {
-    handleError(error);
+    handleError(PacketType.TOWER_ATTACK_REQUEST,error);
   }
 };
 
@@ -125,11 +130,11 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     });
     socket.write(monsterAttackResponse);
   } catch (error) {
-    handleError(error);
+    handleError(PacketType.MONSTER_ATTACK_BASE_REQUEST, error);
   }
 };
 
-// 필요한것. monster, tower 객체, getGameSessionByUser 함수,
+// 필요한것. monster, tower 객체, getGameSessionByUser 함수 => 승환님이 만들어주신것 같은데 user를 넘기는것 보다 userId로 찾는것이 더 가볍지않을까? 토의
 // game.baseDamage, game.getMonster, game.getTower
 // monsterId, towerId 는 각 몬스터 타워마다의 고유 Id
 // 아니면 json 파일에 있는것처럼 몬스터 타워 넘버링인지?
