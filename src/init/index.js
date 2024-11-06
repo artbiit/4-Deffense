@@ -3,11 +3,15 @@ import { getProtoMessages, loadProtos } from "./loadProtos.js";
 import { mysql } from "../db/mysql.js";
 import logger from "../utils/logger.js";
 import { connect } from "../db/redis.js";
+import { loadGameAssets } from "./loadAssets.js";
 const initServer = async () => {
   try {
-    await loadProtos();
-    await mysql.init();
-    await connect();
+    await Promise.all([
+      loadGameAssets(),
+      loadProtos(),
+      mysql.init(),
+      connect(),
+    ]);
     logger.info("All initialized.");
     // 다음 작업
   } catch (e) {
