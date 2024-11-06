@@ -30,9 +30,7 @@ class User {
   handlePong(data) {
     const now = Date.now();
     this.latency = (now - data.timestamp) / 2;
-    console.log(
-      `Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`
-    );
+    console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
   }
 
   // 추측항법을 사용하여 위치를 추정하는 메서드

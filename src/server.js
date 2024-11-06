@@ -1,8 +1,8 @@
-import net from "net";
-import initServer from "./init/index.js";
-import configs from "./configs/configs.js";
-import { onConnection } from "./events/onConnection.js";
-import logger from "./utils/logger.js";
+import net from 'net';
+import initServer from './init/index.js';
+import configs from './configs/configs.js';
+import { onConnection } from './events/onConnection.js';
+import logger from './utils/logger.js';
 
 const { SERVER_PORT, SERVER_BIND } = configs;
 
