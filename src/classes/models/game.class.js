@@ -1,4 +1,4 @@
-import IntervalManager from "../managers/interval.manager.js";
+import IntervalManager from '../managers/interval.manager.js';
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -11,12 +11,12 @@ class Game {
     this.id = id;
     this.users = [];
     this.intervalManager = new IntervalManager();
-    this.state = "waiting"; // 'waiting', 'inProgress'
+    this.state = 'waiting'; // 'waiting', 'inProgress'
   }
 
   addUser(user) {
     if (this.users.length >= MAX_PLAYERS) {
-      throw new Error("Game session is full");
+      throw new Error('Game session is full');
     }
     this.users.push(user);
 
@@ -37,7 +37,7 @@ class Game {
     this.intervalManager.removePlayer(userId);
 
     if (this.users.length < MAX_PLAYERS) {
-      this.state = "waiting";
+      this.state = 'waiting';
     }
   }
 
