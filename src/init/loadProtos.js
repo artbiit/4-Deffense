@@ -67,9 +67,7 @@ export const loadProtos = async () => {
       });
     }
 
-    logger.info(
-      `Protobuf 파일이 로드되었습니다. 불러와진 프로토 메세지 갯수 : ${loadedCount}`
-    );
+    logger.info(`Protobuf initialized : ${loadedCount}`);
   } catch (error) {
     logger.error("Protobuf 파일 로드 중 오류가 발생했습니다:", error);
   }
