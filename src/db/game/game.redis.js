@@ -8,11 +8,10 @@ export const cacheGameSession = async (uuid) => {
 };
 
 export const removeGameSession = async (uuid) => {
-    const redis = await getRedis();
-    try{
-        multi.lrem(SESSION_LIST_KEY, 0, uuid);
-        redis.
-    }catch(error){
-        logger.error(`removeGameSession. ${error}`);
-    }
-}
+  const redis = await getRedis();
+  try {
+    redis.lrem(SESSION_LIST_KEY, 0, uuid);
+  } catch (error) {
+    logger.error(`removeGameSession. ${error}`);
+  }
+};
