@@ -7,6 +7,7 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { createAddEnemyTowerNotification } from '../../utils/notification/makeNotification.js';
+import Result from '../result.js';
 
 const { PacketType } = configs;
 
@@ -39,15 +40,6 @@ const towerPurchaseHandler = ({ socket, payload }) => {
     const tower = new Tower({ x, y });
     gameSession.addTower(user, tower);
 
-    // S2CTowerPurchaseResponse 패킷 전송
-    const purchaseTowerResponseData = { towerId: tower.id };
-    const purchaseTowerResponse = createResponse(
-      PacketType.TOWER_PURCHASE_RESPONSE,
-      user,
-      purchaseTowerResponseData,
-    );
-    socket.write(purchaseTowerResponse);
-
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id);
     const opponentSocket = opponent.socket;
@@ -55,9 +47,14 @@ const towerPurchaseHandler = ({ socket, payload }) => {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }
 
-    // S2CAddEnemyTowerNotification 패킷 전송
+    // 적 타워 설치 알림 패킷 전송
     const addEnemyTowerResponse = createAddEnemyTowerNotification(opponent, tower);
     opponentSocket.write(addEnemyTowerResponse);
+
+    // 타워 설치 응답 패킷 전송
+    const towerPurchaseResponseData = { towerId: tower.id };
+    const result = new Result(towerPurchaseResponseData, PacketType.TOWER_PURCHASE_RESPONSE);
+    return result;
   } catch (error) {
     handleError(PacketType.TOWER_PURCHASE_REQUEST, error);
   }
