@@ -3,6 +3,10 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { registerRequestHandler } from './register.handler.js';
 import { loginRequestHandler } from './login.handler.js';
+import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
+import { matchRequestHandler } from './matchRequest.handler.js';
+import towerPurchaseHandler from './tower/towerPurchase.handler.js';
+
 
 const { PacketType } = configs;
 
@@ -28,7 +32,7 @@ const handlers = {
     fieldName: 'loginResponse',
   },
   [PacketType.MATCH_REQUEST]: {
-    handler: undefined,
+    handler: matchRequestHandler,
     protoType: 'C2SMatchRequest',
     fieldName: 'matchRequest',
   },
@@ -43,7 +47,7 @@ const handlers = {
     fieldName: 'stateSyncNotification',
   },
   [PacketType.TOWER_PURCHASE_REQUEST]: {
-    handler: undefined,
+    handler: towerPurchaseHandler,
     protoType: 'C2STowerPurchaseRequest',
     fieldName: 'towerPurchaseRequest',
   },
@@ -58,7 +62,7 @@ const handlers = {
     fieldName: 'addEnemyTowerNotification',
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
-    handler: undefined,
+    handler: SpawnMonsterRequestHandler,
     protoType: 'C2SSpawnMonsterRequest',
     fieldName: 'spawnMonsterRequest',
   },
@@ -73,7 +77,7 @@ const handlers = {
     fieldName: 'spawnEnemyMonsterNotification',
   },
   [PacketType.TOWER_ATTACK_REQUEST]: {
-    handler: undefined,
+    handler: towerAttackRequestHandler,
     protoType: 'C2STowerAttackRequest',
     fieldName: 'towerAttackRequest',
   },
@@ -83,7 +87,7 @@ const handlers = {
     fieldName: 'enemyTowerAttackNotification',
   },
   [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
-    handler: undefined,
+    handler: monsterAttackBaseRequestHandler,
     protoType: 'C2SMonsterAttackBaseRequest',
     fieldName: 'monsterAttackBaseRequest',
   },

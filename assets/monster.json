@@ -1,66 +1,66 @@
 {
-    "name": "monster",
-    "version": "1.0.0",
-    "data": [
-      {
-        "id": "MON00001",
-        "DisplayName": "외눈공룡",
-        "Description": "약한공룡",
-        "maxHp": 100,
-        "HpPerLv": 10,
-        "spd": 150,
-        "def": 0,
-        "DefPerLv": 3,
-        "Atk": 10,
-        "AtkPerLv": 2
-      },
-      {
-        "id": "MON00002",
-        "DisplayName": "흰눈애벌레",
-        "Description": "약한벌레",
-        "maxHp": 100,
-        "HpPerLv": 15,
-        "spd": 150,
-        "def": 0,
-        "DefPerLv": 5,
-        "Atk": 5,
-        "AtkPerLv": 1
-      },
-      {
-        "id": "MON00003",
-        "DisplayName": "뾰족부리공룡",
-        "Description": "빠른공룡",
-        "maxHp": 100,
-        "HpPerLv": 10,
-        "spd": 150,
-        "def": 0,
-        "DefPerLv": 1,
-        "Atk": 7,
-        "AtkPerLv": 2
-      },
-      {
-        "id": "MON00004",
-        "DisplayName": "붉은눈공룡",
-        "Description": "신기한공룡",
-        "maxHp": 100,
-        "HpPerLv": 20,
-        "spd": 150,
-        "def": 0,
-        "DefPerLv": 10,
-        "Atk": 15,
-        "AtkPerLv": 3
-      },
-      {
-        "id": "MON00005",
-        "DisplayName": "검정박쥐",
-        "Description": "제일 빠름",
-        "maxHp": 100,
-        "HpPerLv": 10,
-        "spd": 150,
-        "def": 0,
-        "DefPerLv": 1,
-        "Atk": 10,
-        "AtkPerLv": 3
-      }
-    ]
-  }
+  "name": "monster",
+  "version": "1.0.0",
+  "data": [
+    {
+      "id": "MON00001",
+      "DisplayName": "외눈공룡",
+      "Description": "약한공룡",
+      "maxHp": 100,
+      "HpPerLv": 10,
+      "spd": 150,
+      "def": 0,
+      "DefPerLv": 3,
+      "Atk": 10,
+      "AtkPerLv": 2
+    },
+    {
+      "id": "MON00002",
+      "DisplayName": "흰눈애벌레",
+      "Description": "약한벌레",
+      "maxHp": 100,
+      "HpPerLv": 15,
+      "spd": 150,
+      "def": 0,
+      "DefPerLv": 5,
+      "Atk": 5,
+      "AtkPerLv": 1
+    },
+    {
+      "id": "MON00003",
+      "DisplayName": "뾰족부리공룡",
+      "Description": "빠른공룡",
+      "maxHp": 100,
+      "HpPerLv": 10,
+      "spd": 150,
+      "def": 0,
+      "DefPerLv": 1,
+      "Atk": 7,
+      "AtkPerLv": 2
+    },
+    {
+      "id": "MON00004",
+      "DisplayName": "붉은눈공룡",
+      "Description": "신기한공룡",
+      "maxHp": 100,
+      "HpPerLv": 20,
+      "spd": 150,
+      "def": 0,
+      "DefPerLv": 10,
+      "Atk": 15,
+      "AtkPerLv": 3
+    },
+    {
+      "id": "MON00005",
+      "DisplayName": "검정박쥐",
+      "Description": "제일 빠름",
+      "maxHp": 100,
+      "HpPerLv": 10,
+      "spd": 150,
+      "def": 0,
+      "DefPerLv": 1,
+      "Atk": 10,
+      "AtkPerLv": 3
+    }
+  ]
+}
