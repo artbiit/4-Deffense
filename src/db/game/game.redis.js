@@ -7,7 +7,7 @@ export const cacheGameSession = async (uuid) => {
   redis.rpush(`${SESSION_LIST_KEY}`, uuid);
 };
 
-export const removeGameSession = async (uuid) => {
+export const unlinkGameSession = async (uuid) => {
   const redis = await getRedis();
   try {
     redis.lrem(SESSION_LIST_KEY, 0, uuid);
