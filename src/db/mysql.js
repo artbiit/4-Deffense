@@ -120,5 +120,6 @@ class MysqlService {
 }
 
 const mysqlService = new MysqlService();
+await mysqlService.init();
 
 export { mysqlService as mysql };
