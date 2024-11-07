@@ -47,7 +47,6 @@ export const loginRequestHandler = async ({ payload }) => {
       success = false;
       message = '아이디 혹은 비밀번호를 확인해주세요.';
       failCode = GlobalFailCode.AUTHENTICATION_FAILED;
-      throw new Error(message);
     }
   } catch (error) {
     success = false;
