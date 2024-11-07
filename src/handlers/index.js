@@ -13,20 +13,24 @@ const { PacketType } = configs;
 
 const handlers = {
   [PacketType.REGISTER_REQUEST]: {
-    handler: undefined,
-    protoType: "C2SRegisterRequest",
+    handler: registerRequestHandler,
+    protoType: 'C2SRegisterRequest',
+    fieldName: 'registerRequest',
   },
   [PacketType.REGISTER_RESPONSE]: {
     handler: undefined,
-    protoType: "S2CRegisterResponse",
+    protoType: 'S2CRegisterResponse',
+    fieldName: 'registerResponse',
   },
   [PacketType.LOGIN_REQUEST]: {
-    handler: undefined,
-    protoType: "C2SLoginRequest",
+    handler: loginRequestHandler,
+    protoType: 'C2SLoginRequest',
+    fieldName: 'loginRequest',
   },
   [PacketType.LOGIN_RESPONSE]: {
     handler: undefined,
-    protoType: "S2CLoginResponse",
+    protoType: 'S2CLoginResponse',
+    fieldName: 'loginResponse',
   },
   [PacketType.MATCH_REQUEST]: {
     handler: matchRequestHandler,
@@ -35,11 +39,13 @@ const handlers = {
   },
   [PacketType.MATCH_START_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CMatchStartNotification",
+    protoType: 'S2CMatchStartNotification',
+    fieldName: 'matchStartNotification',
   },
   [PacketType.STATE_SYNC_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CStateSyncNotification",
+    protoType: 'S2CStateSyncNotification',
+    fieldName: 'stateSyncNotification',
   },
   [PacketType.TOWER_PURCHASE_REQUEST]: {
     handler: towerPurchaseHandler,
@@ -48,11 +54,13 @@ const handlers = {
   },
   [PacketType.TOWER_PURCHASE_RESPONSE]: {
     handler: undefined,
-    protoType: "S2CTowerPurchaseResponse",
+    protoType: 'S2CTowerPurchaseResponse',
+    fieldName: 'towerPurchaseResponse',
   },
   [PacketType.ADD_ENEMY_TOWER_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CAddEnemyTowerNotification",
+    protoType: 'S2CAddEnemyTowerNotification',
+    fieldName: 'addEnemyTowerNotification',
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
     handler: spawnMonsterRequestHandler,
@@ -61,11 +69,13 @@ const handlers = {
   },
   [PacketType.SPAWN_MONSTER_RESPONSE]: {
     handler: undefined,
-    protoType: "S2CSpawnMonsterResponse",
+    protoType: 'S2CSpawnMonsterResponse',
+    fieldName: 'spawnMonsterResponse',
   },
   [PacketType.SPAWN_ENEMY_MONSTER_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CSpawnEnemyMonsterNotification",
+    protoType: 'S2CSpawnEnemyMonsterNotification',
+    fieldName: 'spawnEnemyMonsterNotification',
   },
   [PacketType.TOWER_ATTACK_REQUEST]: {
     handler: towerAttackRequestHandler,
@@ -74,7 +84,8 @@ const handlers = {
   },
   [PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CEnemyTowerAttackNotification",
+    protoType: 'S2CEnemyTowerAttackNotification',
+    fieldName: 'enemyTowerAttackNotification',
   },
   [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
     handler: monsterAttackBaseRequestHandler,
@@ -83,31 +94,35 @@ const handlers = {
   },
   [PacketType.UPDATE_BASE_HP_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CUpdateBaseHPNotification",
+    protoType: 'S2CUpdateBaseHPNotification',
+    fieldName: 'updateBaseHpNotification',
   },
   [PacketType.GAME_OVER_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CGameOverNotification",
+    protoType: 'S2CGameOverNotification',
+    fieldName: 'gameOverNotification',
   },
   [PacketType.GAME_END_REQUEST]: {
     handler: undefined,
-    protoType: "C2SGameEndRequest",
+    protoType: 'C2SGameEndRequest',
+    fieldName: 'gameEndRequest',
   },
   [PacketType.MONSTER_DEATH_NOTIFICATION]: {
     handler: undefined,
-    protoType: "C2SMonsterDeathNotification",
+    protoType: 'C2SMonsterDeathNotification',
+    fieldName: 'monsterDeathNotification',
   },
   [PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
     handler: undefined,
-    protoType: "S2CEnemyMonsterDeathNotification",
+    protoType: 'S2CEnemyMonsterDeathNotification',
+    fieldName: 'enemyMonsterDeathNotification',
   },
 };
-
 export const getHandlerById = (handlerId) => {
   if (!handlers[handlerId]) {
     throw new CustomError(
       ErrorCodes.UNKNOWN_HANDLER_ID,
-      `핸들러를 찾을 수 없습니다: ID ${handlerId}`
+      `핸들러를 찾을 수 없습니다: ID ${handlerId}`,
     );
   }
   return handlers[handlerId].handler;
@@ -117,8 +132,18 @@ export const getProtoTypeNameByHandlerId = (handlerId) => {
   if (!handlers[handlerId]) {
     throw new CustomError(
       ErrorCodes.UNKNOWN_HANDLER_ID,
-      `핸들러를 찾을 수 없습니다: ID ${handlerId}`
+      `핸들러를 찾을 수 없습니다: ID ${handlerId}`,
     );
   }
   return handlers[handlerId].protoType;
+};
+
+export const getFieldNameByHandlerId = (handlerId) => {
+  if (!handlers[handlerId]) {
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러를 찾을 수 없습니다: ID ${handlerId}`,
+    );
+  }
+  return handlers[handlerId].fieldName;
 };
