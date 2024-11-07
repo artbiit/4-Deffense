@@ -50,6 +50,13 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
 
     // 여기까지 타워가 몬스터에게 대미지를 입힌다. 까지 완료
     logger.info(`타워가 몬스터에게 성공적으로 공격했습니다. 피해량 : ${damage}`);
+
+    // 내타워가 어떤 몬스터를 공격했는지 상대방에게 알려야함.
+    // createEnemyTowerAttackNotification()
+    const notification = createAddEnemyTowerNotification(monsterId, towerId, user);
+    const opponentSocket = game.getOpponent(userId);
+
+    opponentSocket.write(notification);
   } catch (error) {
     handleError(PacketType.TOWER_ATTACK_REQUEST, error);
   }
