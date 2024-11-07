@@ -1,6 +1,7 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { gameEndRequestHandler } from '../handlers/gameEnd.handler.js';
 
 const { PacketType } = configs;
 
@@ -96,7 +97,7 @@ const handlers = {
     fieldName: 'gameOverNotification',
   },
   [PacketType.GAME_END_REQUEST]: {
-    handler: undefined,
+    handler: gameEndRequestHandler,
     protoType: 'C2SGameEndRequest',
     fieldName: 'gameEndRequest',
   },
