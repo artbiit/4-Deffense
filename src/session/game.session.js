@@ -1,5 +1,7 @@
 import { gameSessions } from './sessions.js';
 import Game from '../classes/models/game.class.js';
+import { getUserBySocket } from './user.session.js';
+import logger from '../utils/logger.js';
 
 export const addGameSession = (id) => {
   const session = new Game(id);
@@ -19,13 +21,17 @@ export const getGameSession = (id) => {
   return gameSessions.find((session) => session.id === id);
 };
 
-export const addMonsterToGameSession = (socket, monster) => {
+export const addMonsterToGameSession = (socket, monsterNumber) => {
   const session = getGameSession(socket);
-  if (session) {
-    session.monsters.push(monster);
-    return true; // 성공적으로 추가했음을 반환
+  const user = getUserBySocket(socket);
+  if (session && user) {
+    return session.addMonster(user.id, monsterNumber);
   }
-  return false; // 세션이 없으면 false 반환
+
+  logger.error(
+    `addMonsterToGameSession. failed add Monster : [${session.id}][${user.id}] => ${monsterNumber}`,
+  );
+  return null;
 };
 
 export const getGameSessionByUser = (user) => {};
