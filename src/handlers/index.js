@@ -1,15 +1,18 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { registerRequestHandler } from './register.handler.js';
+import { loginRequestHandler } from './login.handler.js';
 import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
 import { matchRequestHandler } from './matchRequest.handler.js';
 import towerPurchaseHandler from './tower/towerPurchase.handler.js';
+
 
 const { PacketType } = configs;
 
 const handlers = {
   [PacketType.REGISTER_REQUEST]: {
-    handler: undefined,
+    handler: registerRequestHandler,
     protoType: 'C2SRegisterRequest',
     fieldName: 'registerRequest',
   },
@@ -19,7 +22,7 @@ const handlers = {
     fieldName: 'registerResponse',
   },
   [PacketType.LOGIN_REQUEST]: {
-    handler: undefined,
+    handler: loginRequestHandler,
     protoType: 'C2SLoginRequest',
     fieldName: 'loginRequest',
   },
