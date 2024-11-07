@@ -16,13 +16,12 @@ export const makeNotification = () => {};
 /**
  * S2CAddEnemyTowerNotification 패킷을 생성하는 함수
  * @param {User} user 알림을 받을 유저
- * @param {string} towerId 설치된 적 타워 ID
- * @param {number} x 설치된 적 타워 x 좌표
- * @param {number} y 설치된 적 타워 y 좌표
+ * @param {Tower} tower 설치된 적 타워
  * @returns {Buffer} 전송할 패킷
  */
-export const createAddEnemyTowerNotification = (user, towerId, x, y) => {
+export const createAddEnemyTowerNotification = (user, tower) => {
   const packetType = PacketType.ADD_ENEMY_TOWER_NOTIFICATION;
+  const { towerId, x, y } = tower;
   const payload = { towerId, x, y };
   return makeNotification(packetType, user, payload);
 };
