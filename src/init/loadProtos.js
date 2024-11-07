@@ -1,15 +1,15 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import protobuf from 'protobufjs';
-import logger from '../utils/logger.js';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import protobuf from "protobufjs";
+import logger from "../utils/logger.js";
 
 // 현재 파일의 절대 경로 추출
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // 프로토파일이 있는 디렉토리 경로 설정
-const protoDir = path.join(__dirname, '../protobuf');
+const protoDir = path.join(__dirname, "../protobuf");
 
 // 주어진 디렉토리 내 모든 proto 파일을 재귀적으로 찾는 함수
 const getAllProtoFiles = (dir, fileList = []) => {
@@ -18,7 +18,7 @@ const getAllProtoFiles = (dir, fileList = []) => {
     const filePath = path.join(dir, file);
     if (fs.statSync(filePath).isDirectory()) {
       getAllProtoFiles(filePath, fileList);
-    } else if (path.extname(file) === '.proto') {
+    } else if (path.extname(file) === ".proto") {
       fileList.push(filePath);
     }
   });
@@ -58,7 +58,8 @@ export const loadProtos = async () => {
               if (!protoMessages[namespaceName]) {
                 protoMessages[namespaceName] = {};
               }
-              protoMessages[namespaceName][typeName] = root.lookupType(fullName);
+              protoMessages[namespaceName][typeName] =
+                root.lookupType(fullName);
               loadedCount++;
             }
           });
@@ -66,9 +67,11 @@ export const loadProtos = async () => {
       });
     }
 
-    logger.info(`Protobuf initialized : ${loadedCount}`);
+    logger.info(
+      `Protobuf 파일이 로드되었습니다. 불러와진 프로토 메세지 갯수 : ${loadedCount}`
+    );
   } catch (error) {
-    logger.error('Protobuf 파일 로드 중 오류가 발생했습니다:', error);
+    logger.error("Protobuf 파일 로드 중 오류가 발생했습니다:", error);
   }
 };
 
