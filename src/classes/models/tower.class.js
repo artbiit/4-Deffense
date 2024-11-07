@@ -9,6 +9,13 @@ class Tower {
 
     this.x = coords.x;
     this.y = coords.y;
+
+    // 있어야 하는 값
+    this.power = 0;
+  }
+
+  getPower() {
+    return this.power;
   }
 }
 export default Tower;

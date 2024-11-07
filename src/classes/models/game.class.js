@@ -4,7 +4,6 @@ import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
 
-
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -21,8 +20,8 @@ class Game {
     this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'inProgress'
     this.towers = {};
+    this.bases = {};
   }
-  
 
   addUser(user) {
     if (this.users.length >= GAME_MAX_PLAYER) {
@@ -34,7 +33,6 @@ class Game {
     gamesJoinedbyUsers.set(user, this);
 
     this.towers[user] = [];
-
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === GAME_MAX_PLAYER) {
@@ -52,7 +50,7 @@ class Game {
     this.users = this.users.filter((user) => user.id !== userId);
     delete this.monsters[userId]; // 유저 제거 시 몬스터 목록도 삭제
     this.intervalManager.removePlayer(userId);
-    
+
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
 
@@ -89,8 +87,28 @@ class Game {
     return maxLatency;
   }
 
-  getTower(userId, towerId){}
-  getMonster(userId, monsterId){}
+  // towers[user] 로 추가하고 있는데, userId로 할지 user로 할지 통일 토의 해야함.
+  // getTower, getMonster 모두 찾는데 실패했을때 if문 거치지 않았음.
+  // 사용하는 곳에서 검사해주는 쪽으로 작업바람.
+  getTower(userId, towerId) {
+    if (!this.towers[userId]) {
+      throw new Error('해당하는 유저가 없습니다.');
+    }
+
+    const findTower = this.towers[userId].find((tower) => tower.id === towerId);
+
+    return findTower;
+  }
+
+  getMonster(userId, monsterId) {
+    if (!this.monsters[userId]) {
+      throw new Error('해당하는 유저가 없습니다.');
+    }
+
+    const findMonster = this.monsters[userId].find((monster) => monster.id === monsterId);
+
+    return findMonster;
+  }
 
   startGame() {}
 
@@ -103,6 +121,15 @@ class Game {
     this.monsters[userId].push(monster); // 해당 유저의 몬스터 목록에 몬스터 추가
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
+  }
+
+  baseDamage(userId, damage) {
+    this.bases[userId] -= damage;
+
+    if (this.bases[userId] <= 0) {
+      // 베이스 펑
+      // 게임종료.
+    }
   }
 }
 
