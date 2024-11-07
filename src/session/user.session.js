@@ -3,6 +3,7 @@ import logger from '../utils/logger.js';
 import game from '../classes/models/game.class.js';
 import { gamesJoinedbyUsers } from './sessions.js';
 
+
 export const userSessions = [];
 
 export const addUser = (socket, uuid) => {

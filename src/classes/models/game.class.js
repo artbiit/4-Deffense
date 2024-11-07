@@ -1,35 +1,43 @@
+import IntervalManager from '../managers/interval.manager.js';
+import configs from '../../configs/configs.js';
+import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
-import IntervalManager from '../managers/interval.manager.js';
+
 
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
 // } from '../../utils/notification/game.notification.js';
 
-const MAX_PLAYERS = 2;
+const { GAME_MAX_PLAYER } = configs;
 
 class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
+    this.monsters = {}; // 유저별로 관리되는 몬스터 목록 (각 유저 ID를 키로 사용)
     this.intervalManager = new IntervalManager();
+    this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'inProgress'
     this.towers = {};
   }
+  
 
   addUser(user) {
-    if (this.users.length >= MAX_PLAYERS) {
+    if (this.users.length >= GAME_MAX_PLAYER) {
       throw new Error('Game session is full');
     }
 
     this.users.push(user);
+    this.monsters[user.id] = []; // 새로운 유저 추가 시 몬스터 목록 초기화
     gamesJoinedbyUsers.set(user, this);
 
     this.towers[user] = [];
 
+
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    if (this.users.length === MAX_PLAYERS) {
+    if (this.users.length === GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
       }, 3000);
@@ -42,14 +50,15 @@ class Game {
 
   removeUser(userId) {
     this.users = this.users.filter((user) => user.id !== userId);
+    delete this.monsters[userId]; // 유저 제거 시 몬스터 목록도 삭제
+    this.intervalManager.removePlayer(userId);
+    
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
 
     delete this.towers[user];
 
-    this.intervalManager.removePlayer(userId);
-
-    if (this.users.length < MAX_PLAYERS) {
+    if (this.users.length < GAME_MAX_PLAYER) {
       this.state = 'waiting';
     }
   }
@@ -86,6 +95,15 @@ class Game {
   startGame() {}
 
   getAllLocation() {}
+
+  // 유저의 몬스터 추가
+  addMonster(userId, monsterNumber) {
+    //생성된 순서대로 번호를 부여하면 서로 겹칠일 없음.
+    const monster = new Monster(this.monsters[userId].length + 1, monsterNumber, this.monsterLevel);
+    this.monsters[userId].push(monster); // 해당 유저의 몬스터 목록에 몬스터 추가
+    //이 유저가아닌 상대 유저한테 noti해야함
+    return monster.id;
+  }
 }
 
 export default Game;

@@ -59,7 +59,7 @@ const handlers = {
     fieldName: 'addEnemyTowerNotification',
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
-    handler: undefined,
+    handler: SpawnMonsterRequestHandler,
     protoType: 'C2SSpawnMonsterRequest',
     fieldName: 'spawnMonsterRequest',
   },

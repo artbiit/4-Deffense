@@ -1,9 +1,12 @@
+import logger from '../utils/logger.js';  
 import { gameSessions, gamesJoinedbyUsers } from './sessions.js';
 import Game from '../classes/models/game.class.js';
 import { getUserById, getUserBySocket } from './user.session.js';
 
+
 export const addGameSession = (id) => {
   const session = new Game(id);
+  session.monsters = {}; // 세션에 몬스터 리스트를 추가
   gameSessions.push(session);
   return session;
 };
@@ -18,6 +21,22 @@ export const removeGameSession = (id) => {
 export const getGameSession = (id) => {
   return gameSessions.find((session) => session.id === id);
 };
+
+
+
+export const addMonsterToGameSession = (socket, monsterNumber) => {
+  const session = getGameSession(socket);
+  const user = getUserBySocket(socket);
+  if (session && user) {
+    return session.addMonster(user.id, monsterNumber);
+  }
+
+  logger.error(
+    `addMonsterToGameSession. failed add Monster : [${session.id}][${user.id}] => ${monsterNumber}`,
+  );
+  return null;
+};
+
 
 /**
  * @param {User} user
