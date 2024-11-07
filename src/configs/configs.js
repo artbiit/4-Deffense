@@ -8,6 +8,7 @@ import {
 } from '../constants/header.js';
 import { CLIENT_VERSIONS } from '../constants/constants.js';
 import env from '../constants/env.js';
+import { REDIS_MATCH_REQUEST_CHANNEL } from '../constants/redis.js';
 
 const configs = {
   GlobalFailCode,
@@ -20,6 +21,7 @@ const configs = {
   PACKET_TOTAL_LENGTH:
     PACKET_TYPE_LENGTH + PACKET_PAYLOAD_LENGTH + PACKET_SEQUENCE_LENGTH + PACKET_VERSION_LENGTH,
   PacketType,
+  REDIS_MATCH_REQUEST_CHANNEL,
   ...env,
 };
 
