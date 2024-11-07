@@ -45,6 +45,7 @@ export const getGameSessionBySocket = (socket) => {
   return gamesJoinedbyUsers.get(user);
 };
 
+
 export const getAllGameSessions = () => {
   return gameSessions;
 };
