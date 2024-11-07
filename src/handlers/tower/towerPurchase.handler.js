@@ -6,7 +6,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import { createAddEnemyTowerNotification } from '../../utils/notification/game.notification.js';
+import { createAddEnemyTowerNotification } from '../../utils/notification/makeNotification.js';
 
 const { PacketType } = configs;
 
@@ -50,13 +50,14 @@ const towerPurchaseHandler = ({ socket, payload }) => {
 
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id);
-    if (!opponent) {
+    const opponentSocket = opponent.socket;
+    if (!opponent || !opponentSocket) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }
 
     // S2CAddEnemyTowerNotification 패킷 전송
     const addEnemyTowerResponse = createAddEnemyTowerNotification(opponent, tower);
-    socket.write(addEnemyTowerResponse);
+    opponentSocket.write(addEnemyTowerResponse);
   } catch (error) {
     handleError(PacketType.TOWER_PURCHASE_REQUEST, error);
   }
