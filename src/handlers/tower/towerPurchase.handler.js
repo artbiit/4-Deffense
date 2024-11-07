@@ -10,7 +10,7 @@ import { createAddEnemyTowerNotification } from '../../utils/notification/game.n
 
 const { PacketType } = configs;
 
-const purchaseTower = ({ socket, payload }) => {
+const towerPurchaseHandler = ({ socket, payload }) => {
   try {
     const { x, y } = payload;
 
@@ -52,4 +52,4 @@ const purchaseTower = ({ socket, payload }) => {
   }
 };
 
-export default purchaseTower;
+export default towerPurchaseHandler;
