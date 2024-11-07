@@ -29,14 +29,12 @@ class MatchMaker {
 
   #matchMaking = async () => {
     let queueCount = await getQueueCount();
-    console.log(queueCount);
     //1명이면 매칭이 불가능함
     if (queueCount < 2) {
       return;
     }
     //유저 정보 없으면 쿼리 중에 소거된 것이니 작업 취소
     const userByQueue = await dequeueMatchMaking();
-    console.log(userByQueue);
     if (!userByQueue) {
       return;
     }
@@ -45,7 +43,6 @@ class MatchMaker {
       let range = 50;
       let tryCount = 0;
       while (true) {
-        console.log(`match Try : ${tryCount}`);
         const user = getUserById(userByQueue.userId);
 
         //연결이 해제 되었으면 작업 취소
@@ -54,15 +51,12 @@ class MatchMaker {
         }
 
         let userScore = await getUserScore(userByQueue.userId);
-        console.log('userScore:', userScore);
         //연결해제든, 이미 다른 곳에서 매칭된 것이든 작업 취소
         if (!userScore) {
           break;
         }
         userScore = Number(userScore);
         const rangeUsers = await GetUsersByScoreRange(userScore - range, userScore + range, 5);
-        console.log('-------------------\n', rangeUsers);
-        console.log('-----------------------');
         if (rangeUsers) {
           let closestUser = null;
           let minSocreDiff = Infinity;
@@ -83,10 +77,8 @@ class MatchMaker {
           }
 
           if (closestUser) {
-            console.log('removeUsers');
             //매칭
             await removeUsers(userByQueue.userId, closestUser.id);
-            console.log('removeUsers end');
             //게임에 유저 등록
             const gameSession = await addGameSession();
             gameSession.addUser(user);
@@ -98,7 +90,7 @@ class MatchMaker {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         queueCount = await getQueueCount();
         if (queueCount < 2) {
-          logger.info(`MatchMaker. Stop : ${queueCount}`);
+          logger.info(`MatchMaker. Stop[${tryCount}] : ${queueCount}`);
           break;
         }
       }
