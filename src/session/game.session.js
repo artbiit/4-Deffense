@@ -1,5 +1,6 @@
-import { gameSessions } from "./sessions.js";
-import Game from "../classes/models/game.class.js";
+import { gameSessions, gamesJoinedbyUsers } from './sessions.js';
+import Game from '../classes/models/game.class.js';
+import { getUserById, getUserBySocket } from './user.session.js';
 
 export const addGameSession = (id) => {
   const session = new Game(id);
@@ -18,7 +19,32 @@ export const getGameSession = (id) => {
   return gameSessions.find((session) => session.id === id);
 };
 
-export const getGameSessionByUserId = (userId) => {};
+/**
+ * @param {User} user
+ * @returns {Game} gameSession
+ */
+export const getGameSessionByUser = (user) => {
+  return gamesJoinedbyUsers.get(user);
+};
+
+/**
+ * @param {string} userId
+ * @returns {Game} gameSession
+ */
+export const getGameSessionByUserId = (userId) => {
+  const user = getUserById(userId);
+  return gamesJoinedbyUsers.get(user);
+};
+
+/**
+ * @param {net.Socket} socket
+ * @returns {Game} gameSession
+ */
+export const getGameSessionBySocket = (socket) => {
+  const user = getUserBySocket(socket);
+  return gamesJoinedbyUsers.get(user);
+};
+
 
 export const getAllGameSessions = () => {
   return gameSessions;

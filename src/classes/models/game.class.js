@@ -1,4 +1,6 @@
-import IntervalManager from "../managers/interval.manager.js";
+import { gamesJoinedbyUsers } from '../../session/sessions.js';
+import { getUserById } from '../../session/user.session.js';
+import IntervalManager from '../managers/interval.manager.js';
 
 // import {
 //   createLocationPacket,
@@ -12,14 +14,19 @@ class Game {
     this.id = id;
     this.users = [];
     this.intervalManager = new IntervalManager();
-    this.state = "waiting"; // 'waiting', 'inProgress'
+    this.state = 'waiting'; // 'waiting', 'inProgress'
+    this.towers = {};
   }
 
   addUser(user) {
     if (this.users.length >= MAX_PLAYERS) {
-      throw new Error("Game session is full");
+      throw new Error('Game session is full');
     }
+
     this.users.push(user);
+    gamesJoinedbyUsers.set(user, this);
+
+    this.towers[user] = [];
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === MAX_PLAYERS) {
@@ -35,11 +42,34 @@ class Game {
 
   removeUser(userId) {
     this.users = this.users.filter((user) => user.id !== userId);
+    const user = getUserById(userId);
+    gamesJoinedbyUsers.delete(user);
+
+    delete this.towers[user];
+
     this.intervalManager.removePlayer(userId);
 
     if (this.users.length < MAX_PLAYERS) {
-      this.state = "waiting";
+      this.state = 'waiting';
     }
+  }
+
+  /**
+   * 상대방 유저를 조회하는 함수
+   * @param {string} userId 기준이 되는 유저의 ID
+   * @returns {User} 상대방 유저
+   */
+  getOpponent(userId) {
+    return this.users.filter((user) => user.id !== userId)[0];
+  }
+
+  /**
+   * 유저가 설치한 타워를 해당 게임의 타워목록에 추가하는 함수
+   * @param {User} user 타워를 설치한 유저
+   * @param {Tower} tower 설치한 타워
+   */
+  addTower(user, tower) {
+    this.towers[user].push(tower);
   }
 
   getMaxLatency() {
