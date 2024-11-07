@@ -9,6 +9,7 @@ import {
   removeUsers,
 } from '../../db/match/match.redis.js';
 import { getUserById } from '../../session/user.session.js';
+import { addGameSession } from '../../session/game.session.js';
 
 const { REDIS_MATCH_REQUEST_CHANNEL } = configs;
 
@@ -79,6 +80,7 @@ class MatchMaker {
           if (closestUser) {
             //매칭
             await removeUsers([userId, closestUser.id]);
+            const gameSession = await addGameSession();
             //게임에 유저 등록 후 시작 하기
             break;
           }

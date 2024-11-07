@@ -1,13 +1,13 @@
-import logger from '../utils/logger.js';  
+import logger from '../utils/logger.js';
 import { gameSessions, gamesJoinedbyUsers } from './sessions.js';
 import Game from '../classes/models/game.class.js';
 import { getUserById, getUserBySocket } from './user.session.js';
+import { v4 as uuidv4 } from 'uuid';
 
-
-export const addGameSession = (id) => {
-  const session = new Game(id);
-  session.monsters = {}; // 세션에 몬스터 리스트를 추가
+export const addGameSession = () => {
+  const session = new Game(uuidv4());
   gameSessions.push(session);
+
   return session;
 };
 
@@ -22,8 +22,6 @@ export const getGameSession = (id) => {
   return gameSessions.find((session) => session.id === id);
 };
 
-
-
 export const addMonsterToGameSession = (socket, monsterNumber) => {
   const session = getGameSession(socket);
   const user = getUserBySocket(socket);
@@ -36,7 +34,6 @@ export const addMonsterToGameSession = (socket, monsterNumber) => {
   );
   return null;
 };
-
 
 /**
  * @param {User} user
@@ -63,7 +60,6 @@ export const getGameSessionBySocket = (socket) => {
   const user = getUserBySocket(socket);
   return gamesJoinedbyUsers.get(user);
 };
-
 
 export const getAllGameSessions = () => {
   return gameSessions;
