@@ -80,9 +80,10 @@ class MatchMaker {
           if (closestUser) {
             //매칭
             await removeUsers([userId, closestUser.id]);
+            //게임에 유저 등록
             const gameSession = await addGameSession();
-            //게임에 유저 등록 후 시작 하기
-            break;
+            gameSession.addUser(user);
+            gameSession.addUser(closestUser);
           }
         }
         //점진적 범위 증가
