@@ -2,6 +2,8 @@ import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
+import { matchRequestHandler } from './matchRequest.handler.js';
+
 const { PacketType } = configs;
 
 const handlers = {
@@ -26,7 +28,7 @@ const handlers = {
     fieldName: 'loginResponse',
   },
   [PacketType.MATCH_REQUEST]: {
-    handler: undefined,
+    handler: matchRequestHandler,
     protoType: 'C2SMatchRequest',
     fieldName: 'matchRequest',
   },
