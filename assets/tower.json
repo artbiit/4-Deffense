@@ -1,0 +1,58 @@
+{
+  "name": "tower",
+  "version": "1.0.0",
+  "data": [
+    {
+      "id": "TOW00001",
+      "DisplayName": "일반타워",
+      "Description": "평범한 타워",
+      "Power": 40,
+      "PowerPerLv": 10,
+      "Range": 300,
+      "Cooldown": 180,
+      "Duration": 30,
+      "Cost": 3000,
+      "Extra": 1,
+      "ExtraPerLv": 0.5
+    },
+    {
+      "id": "TOW00002",
+      "DisplayName": "화염타워",
+      "Description": "화염 광역공격 타워",
+      "Power": 60,
+      "PowerPerLv": 15,
+      "Range": 400,
+      "Cooldown": 300,
+      "Duration": 0,
+      "Cost": 3000,
+      "Extra": 100,
+      "ExtraPerLv": 0
+    },
+    {
+      "id": "TOW00003",
+      "DisplayName": "번개타워",
+      "Description": "체인 라이트닝 타워",
+      "Power": 20,
+      "PowerPerLv": 5,
+      "Range": 200,
+      "Cooldown": 60,
+      "Duration": 0,
+      "Cost": 3000,
+      "Extra": 3,
+      "ExtraPerLv": 1
+    },
+    {
+      "id": "TOW00004",
+      "DisplayName": "얼음타워",
+      "Description": "이동속도를 줄여주는 타워",
+      "Power": 10,
+      "PowerPerLv": 5,
+      "Range": 300,
+      "Cooldown": 120,
+      "Duration": 0,
+      "Cost": 3000,
+      "Extra": 10,
+      "ExtraPerLv": 1
+    }
+  ]
+}

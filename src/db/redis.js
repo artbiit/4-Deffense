@@ -25,7 +25,10 @@ const connect = async () => {
         redis = null; // 연결 실패 시 redis 객체를 null로 설정
       });
 
-      logger.info("redis connected");
+      redis.on('message', async (channel, message) => {
+        logger.info(`Redis received publish[${channel}] => ${message}`);
+      });
+      logger.info('redis connected');
     } catch (e) {
       logger.error(`Redis connection failed, ${e}`);
       redis = null;

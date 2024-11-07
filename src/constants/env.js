@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 /**
@@ -7,19 +7,19 @@ dotenv.config();
  * @type {Object}
  */
 const requiredEnv = {
-  DB: ["HOST", "PORT", "USER", "PASSWORD", "NAME", "CONNECTION_LIMIT"],
-  SERVER: ["PORT", "BIND"],
-  REDIS: ["HOST", "PORT", "PASSWORD"],
-  GAME: ["MAX_PLAYER"],
+  DB: ['HOST', 'PORT', 'USER', 'PASSWORD', 'NAME', 'CONNECTION_LIMIT'],
+  SERVER: ['PORT', 'BIND'],
+  REDIS: ['HOST', 'PORT', 'PASSWORD'],
+  GAME: ['MAX_PLAYER'],
   JWT: [
-    "SECRET",
-    "EXPIRES_IN",
-    "ALGORITHM",
-    "ISSUER",
-    "AUDIENCE",
-    "REFRESH_SECRET",
-    "REFRESH_EXPIRES_IN",
-    "ALGORITHM",
+    'SECRET',
+    'EXPIRES_IN',
+    'ALGORITHM',
+    'ISSUER',
+    'AUDIENCE',
+    'REFRESH_SECRET',
+    'REFRESH_EXPIRES_IN',
+    'ALGORITHM',
   ],
 };
 
@@ -50,16 +50,13 @@ Object.keys(requiredEnv).forEach((key) => {
  * 각 환경 변수는 'NAMESPACE_KEY' 형식의 키를 갖도록 변환됩니다.
  * @type {Object}
  */
-const flattenedConfig = Object.entries(config).reduce(
-  (acc, [namespace, values]) => {
-    Object.entries(values).forEach(([key, value]) => {
-      acc[`${namespace}_${key}`] = value;
-    });
+const flattenedConfig = Object.entries(config).reduce((acc, [namespace, values]) => {
+  Object.entries(values).forEach(([key, value]) => {
+    acc[`${namespace}_${key}`] = value;
+  });
 
-    return acc;
-  },
-  {}
-);
+  return acc;
+}, {});
 
 /**
  * 평탄화된 환경 변수 객체를 내보냅니다.

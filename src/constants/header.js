@@ -45,5 +45,5 @@ export const PacketType = {
 };
 
 export const ReversePacketType = Object.fromEntries(
-  Object.entries(PacketType).map(([key, value]) => [value, key])
+  Object.entries(PacketType).map(([key, value]) => [value, key]),
 );

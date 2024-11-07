@@ -1,6 +1,13 @@
-import configs from "../configs/configs.js";
-import CustomError from "../utils/error/customError.js";
-import { ErrorCodes } from "../utils/error/errorCodes.js";
+import configs from '../configs/configs.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { registerRequestHandler } from './register.handler.js';
+import { loginRequestHandler } from './login.handler.js';
+import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
+import { matchRequestHandler } from './matchRequest.handler.js';
+import towerPurchaseHandler from './tower/towerPurchase.handler.js';
+import { spawnMonsterRequestHandler } from './monster/monsterSpawn.handler.js';
+
 
 const { PacketType } = configs;
 
@@ -22,8 +29,9 @@ const handlers = {
     protoType: "S2CLoginResponse",
   },
   [PacketType.MATCH_REQUEST]: {
-    handler: undefined,
-    protoType: "C2SMatchRequest",
+    handler: matchRequestHandler,
+    protoType: 'C2SMatchRequest',
+    fieldName: 'matchRequest',
   },
   [PacketType.MATCH_START_NOTIFICATION]: {
     handler: undefined,
@@ -34,8 +42,9 @@ const handlers = {
     protoType: "S2CStateSyncNotification",
   },
   [PacketType.TOWER_PURCHASE_REQUEST]: {
-    handler: undefined,
-    protoType: "C2STowerPurchaseRequest",
+    handler: towerPurchaseHandler,
+    protoType: 'C2STowerPurchaseRequest',
+    fieldName: 'towerPurchaseRequest',
   },
   [PacketType.TOWER_PURCHASE_RESPONSE]: {
     handler: undefined,
@@ -46,8 +55,9 @@ const handlers = {
     protoType: "S2CAddEnemyTowerNotification",
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
-    handler: undefined,
-    protoType: "C2SSpawnMonsterRequest",
+    handler: spawnMonsterRequestHandler,
+    protoType: 'C2SSpawnMonsterRequest',
+    fieldName: 'spawnMonsterRequest',
   },
   [PacketType.SPAWN_MONSTER_RESPONSE]: {
     handler: undefined,
@@ -58,16 +68,18 @@ const handlers = {
     protoType: "S2CSpawnEnemyMonsterNotification",
   },
   [PacketType.TOWER_ATTACK_REQUEST]: {
-    handler: undefined,
-    protoType: "C2STowerAttackRequest",
+    handler: towerAttackRequestHandler,
+    protoType: 'C2STowerAttackRequest',
+    fieldName: 'towerAttackRequest',
   },
   [PacketType.ENEMY_TOWER_ATTACK_NOTIFICATION]: {
     handler: undefined,
     protoType: "S2CEnemyTowerAttackNotification",
   },
   [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
-    handler: undefined,
-    protoType: "C2SMonsterAttackBaseRequest",
+    handler: monsterAttackBaseRequestHandler,
+    protoType: 'C2SMonsterAttackBaseRequest',
+    fieldName: 'monsterAttackBaseRequest',
   },
   [PacketType.UPDATE_BASE_HP_NOTIFICATION]: {
     handler: undefined,
