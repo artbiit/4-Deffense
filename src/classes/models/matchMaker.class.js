@@ -70,7 +70,6 @@ class MatchMaker {
             const scoreDiff = Math.abs(userScore - rScore);
 
             if (scoreDiff < minSocreDiff) {
-              console.log(`${user.id}/${user.bestScore} - ${rUser.id}/${rUser.bestScore}`);
               minSocreDiff = scoreDiff;
               closestUser = rUser;
             }

@@ -48,8 +48,13 @@ export const matchSuccessNotification = async (gameSession) => {
       monsterSpawnInterval: gameSession.monsterSpawnInterval,
     };
 
-    for (let i = 0; i < users.length; i++) {
-      user = users[i];
+    const keys = Object.keys(users);
+
+    for (let i = 0; i <= users.length; i++) {
+      if (keys[i] == 'length') {
+        continue;
+      }
+      user = users[keys[i]];
       const socket = user.user.socket;
       const playerData = {
         gold: user.gold,

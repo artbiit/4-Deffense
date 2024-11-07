@@ -45,7 +45,9 @@ class Game {
 
     gamesJoinedbyUsers.set(user, this);
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    if (this.users.length === GAME_MAX_PLAYER) {
+
+    if (this.users.length == GAME_MAX_PLAYER) {
+      console.log(this.users.length, ' - ', GAME_MAX_PLAYER);
       setTimeout(() => {
         this.startGame();
       }, 3000);
@@ -114,7 +116,7 @@ class Game {
 
   startGame() {
     this.state = 'in_progress';
-    matchSuccessNotification();
+    matchSuccessNotification(this);
   }
 
   getAllLocation() {}
