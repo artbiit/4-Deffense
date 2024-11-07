@@ -5,7 +5,6 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
-import { createResponse } from '../../utils/response/createResponse.js';
 import { createAddEnemyTowerNotification } from '../../utils/notification/makeNotification.js';
 import Result from '../result.js';
 
