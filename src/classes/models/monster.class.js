@@ -1,13 +1,17 @@
 import { getGameAssets } from '../../init/loadAssets.js';
 
 class Monster {
-  constructor(monsterId, level = 1) {
-    // monster.json에서 monsterId의 데이터를 가져옴
+  constructor(id, monsterNumber, level = 1) {
+    this.id = id;
+
+    const monsterId = `MON${String(monsterNumber).padStart(5, '0')}`;
     const monsterData = getGameAssets().monsters.find((monster) => monster.id === monsterId);
     if (!monsterData) throw new Error(`${monsterId}라는 몬스터가 존재하지 않습니다.`);
 
+    this.monsterId = monsterId;
+    this.monsterNumber = monsterNumber;
     // JSON 데이터에서 몬스터의 기본 속성 초기화
-    this.id = monsterData.id;
+
     this.displayName = monsterData.DisplayName;
     this.description = monsterData.Description;
     this.level = level;
@@ -37,7 +41,7 @@ class Monster {
 
   // 데미지 받음
   takeDamage(towerPower) {
-    // 받은 데미지 값에서 몬스터의 방어력을 빼서 실제 피해량 계산
+    // 받은 데미지 값에서 몬스터의 방어력을 빼서 실제 피해량 계산(0이하로 떨어지면 사망)
     const actualDamage = Math.max(0, towerPower - this.defense);
     this.hp -= actualDamage;
     // 몬스터 체력이 0이하로 떨어지면 사망
