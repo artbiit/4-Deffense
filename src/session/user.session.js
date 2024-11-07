@@ -2,24 +2,25 @@ import User from '../classes/models/user.class.js';
 import logger from '../utils/logger.js';
 import game from '../classes/models/game.class.js';
 import { gamesJoinedbyUsers } from './sessions.js';
-
+import { cacheUserToken, unlinkUserToken } from '../db/user/user.db.js';
 
 export const userSessions = [];
 
-export const addUser = (socket, uuid) => {
+export const addUser = async (socket, uuid, token) => {
+  await cacheUserToken(uuid, token);
   const user = new User(uuid, socket);
   userSessions.push(user);
   gamesJoinedbyUsers.set(user, undefined);
   return user;
 };
 
-export const removeUser = (socket) => {
+export const removeUser = async (socket) => {
   const index = userSessions.findIndex((user) => user.socket === socket);
 
   if (index !== -1) {
     const user = getUserBySocket(socket);
     gamesJoinedbyUsers.delete(user);
-
+    await unlinkUserToken(user.id);
     return userSessions.splice(index, 1)[0];
   }
 };
