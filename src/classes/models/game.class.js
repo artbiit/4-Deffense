@@ -62,6 +62,11 @@ class Game {
     return this.users.filter((user) => user.id !== userId)[0];
   }
 
+  /**
+   * 유저가 설치한 타워를 해당 게임의 타워목록에 추가하는 함수
+   * @param {User} user 타워를 설치한 유저
+   * @param {Tower} tower 설치한 타워
+   */
   addTower(user, tower) {
     this.towers[user].push(tower);
   }
