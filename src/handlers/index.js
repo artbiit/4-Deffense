@@ -1,6 +1,7 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import towerPurchaseHandler from './tower/towerPurchase.handler.js';
 
 const { PacketType } = configs;
 
@@ -41,7 +42,7 @@ const handlers = {
     fieldName: 'stateSyncNotification',
   },
   [PacketType.TOWER_PURCHASE_REQUEST]: {
-    handler: undefined,
+    handler: towerPurchaseHandler,
     protoType: 'C2STowerPurchaseRequest',
     fieldName: 'towerPurchaseRequest',
   },
