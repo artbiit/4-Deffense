@@ -1,7 +1,7 @@
 import { getUserBySocket } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
-import Result from '../result.js';
+import logger from '../../utils/logger.js';
 
 const { PacketType } = configs;
 
@@ -49,9 +49,7 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     monster.damage(damage);
 
     // 여기까지 타워가 몬스터에게 대미지를 입힌다. 까지 완료
-    const message = `타워가 몬스터에게 성공적으로 공격했습니다. 피해량 : ${damage}`;
-
-    return new Result({ message }, PacketType.TOWER_ATTACK_REQUEST);
+    logger.info(`타워가 몬스터에게 성공적으로 공격했습니다. 피해량 : ${damage}`);
   } catch (error) {
     handleError(PacketType.TOWER_ATTACK_REQUEST, error);
   }
@@ -86,9 +84,7 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     // payload에 damage만 담아주기때문에 해당하는 몬스터를 찾을수가 없다.
 
     // 여기까지 몬스터가 base에게 대미지를 주었다.
-    const message = `몬스터가 base에게 성공적으로 공격했습니다. 피해량 : ${damage}`;
-    
-    return new Result({ message }, PacketType.MONSTER_ATTACK_BASE_REQUEST);
+    logger.info(`몬스터가 base에게 성공적으로 공격했습니다. 피해량 : ${damage}`);
   } catch (error) {
     handleError(PacketType.MONSTER_ATTACK_BASE_REQUEST, error);
   }
