@@ -29,13 +29,15 @@ class MatchMaker {
 
   #matchMaking = async () => {
     let queueCount = await getQueueCount();
+    console.log(queueCount);
     //1명이면 매칭이 불가능함
     if (queueCount < 2) {
       return;
     }
     //유저 정보 없으면 쿼리 중에 소거된 것이니 작업 취소
-    const userId = await dequeueMatchMaking();
-    if (!userId) {
+    const userByQueue = await dequeueMatchMaking();
+    console.log(userByQueue);
+    if (!userByQueue) {
       return;
     }
 
@@ -43,43 +45,48 @@ class MatchMaker {
       let range = 50;
       let tryCount = 0;
       while (true) {
-        const user = getUserById(userId);
+        console.log(`match Try : ${tryCount}`);
+        const user = getUserById(userByQueue.userId);
+
         //연결이 해제 되었으면 작업 취소
         if (!user) {
           break;
         }
 
-        let userScore = getUserScore(userId);
+        let userScore = await getUserScore(userByQueue.userId);
+        console.log('userScore:', userScore);
         //연결해제든, 이미 다른 곳에서 매칭된 것이든 작업 취소
         if (!userScore) {
           break;
         }
         userScore = Number(userScore);
-
         const rangeUsers = await GetUsersByScoreRange(userScore - range, userScore + range, 5);
-
+        console.log('-------------------\n', rangeUsers);
+        console.log('-----------------------');
         if (rangeUsers) {
           let closestUser = null;
           let minSocreDiff = Infinity;
           for (let i = 0; i < rangeUsers.length; i += 2) {
             const rUserId = rangeUsers[i];
             const rUser = getUserById(rUserId);
-            if (rUserId === userId || !rUser) {
+            if (!rUserId || rUserId === userByQueue.userId || !rUser) {
               continue;
             }
             const rScore = Number(rangeUsers[i + 1]);
-
             const scoreDiff = Math.abs(userScore - rScore);
 
             if (scoreDiff < minSocreDiff) {
+              console.log(`${user.id}/${user.bestScore} - ${rUser.id}/${rUser.bestScore}`);
               minSocreDiff = scoreDiff;
               closestUser = rUser;
             }
           }
 
           if (closestUser) {
+            console.log('removeUsers');
             //매칭
-            await removeUsers([userId, closestUser.id]);
+            await removeUsers(userByQueue.userId, closestUser.id);
+            console.log('removeUsers end');
             //게임에 유저 등록
             const gameSession = await addGameSession();
             gameSession.addUser(user);
@@ -88,7 +95,12 @@ class MatchMaker {
         }
         //점진적 범위 증가
         range = 50 + tryCount++ * tryCount * 100;
-        await Promise.resolve((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        queueCount = await getQueueCount();
+        if (queueCount < 2) {
+          logger.info(`MatchMaker. Stop : ${queueCount}`);
+          break;
+        }
       }
     } catch (error) {
       logger.error(`MatchMaker. ${error}`);

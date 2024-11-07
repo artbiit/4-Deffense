@@ -4,6 +4,7 @@ import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
 import { getGameAssets } from '../../init/loadAssets.js';
+import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
 // import {
 //   createLocationPacket,
@@ -21,7 +22,6 @@ class Game {
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'inProgress'
-    this.towers = {};
     this.monsterSpawnInterval = 1000;
   }
 
@@ -37,6 +37,8 @@ class Game {
       user,
       monsters: { length: 0 },
       towers: { length: 0 },
+      monsterPath: [],
+      basePosition: { x: 0, y: 0 },
       baseHp: bases.data[0].maxHp,
       gold: 0,
     };
@@ -55,14 +57,10 @@ class Game {
   }
 
   removeUser(userId) {
-    this.users = this.users.filter((user) => user.id !== userId);
-    delete this.monsters[userId]; // 유저 제거 시 몬스터 목록도 삭제
+    delete this.users[userId];
     this.intervalManager.removePlayer(userId);
-
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
-
-    delete this.towers[user];
 
     if (this.users.length < GAME_MAX_PLAYER) {
       this.state = 'waiting';
@@ -116,6 +114,7 @@ class Game {
 
   startGame() {
     this.state = 'in_progress';
+    matchSuccessNotification();
   }
 
   getAllLocation() {}

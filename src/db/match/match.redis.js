@@ -66,13 +66,15 @@ export const removeUserScore = async (userId) => {
 /** 범위내 유저 정보 탐색 */
 export const GetUsersByScoreRange = async (minScore, maxScore, limit = 10) => {
   const redis = await getRedis();
-  return await redis.zrangebyscore(MATCH_SCORE_KEY, minScore, maxScore, {
-    WITHSCORES: true,
-    LIMIT: {
-      offset: 0, // 시작 위치
-      count: limit, // 가져올 유저 수 제한
-    },
-  });
+  return await redis.zrangebyscore(
+    MATCH_SCORE_KEY,
+    minScore,
+    maxScore,
+    'WITHSCORES',
+    'LIMIT',
+    0, // 시작 위치
+    limit, // 가져올 유저 수 제한
+  );
 };
 
 export const getUserScore = async (userId) => {
@@ -88,9 +90,16 @@ export const removeUsers = async (...userIds) => {
 
   const multi = redis.multi();
 
-  for (const userId of userIds) {
-    multi.lrem(WAITING_KEY, 0, userId);
-    multi.zrem(MATCH_SCORE_KEY, userId);
+  for (let userId of userIds) {
+    userId = String(userId);
+
+    if ((await redis.lpos(WAITING_KEY, userId)) !== null) {
+      multi.lrem(WAITING_KEY, 0, userId);
+    }
+
+    if ((await redis.zscore(MATCH_SCORE_KEY, userId)) !== null) {
+      multi.zrem(MATCH_SCORE_KEY, userId);
+    }
   }
-  await multi.exec();
+  return await multi.exec();
 };
