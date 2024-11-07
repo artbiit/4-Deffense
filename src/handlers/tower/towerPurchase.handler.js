@@ -1,15 +1,21 @@
 import { getGameSessionByUser } from '../../session/game.session.js';
-import Tower from '../../classes/models/tower.class';
+import Tower from '../../classes/models/tower.class.js';
 import { getUserBySocket } from '../../session/user.session.js';
-import CustomError from '../../utils/error/customError';
+import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { handleError } from '../../utils/error/errorHandler';
+import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { createAddEnemyTowerNotification } from '../../utils/notification/game.notification.js';
 
 const { PacketType } = configs;
 
+/**
+ * C2STowerPurchaseRequest 요청을 받아서 다음 작업을 수행하는 핸들러:
+ * 1. 해당 요청을 보낸 유저 (타워를 설치한 유저)에게 S2CTowerPurchaseResponse 응답 패킷을 전송
+ * 2. 상대방 유저에게 S2CAddEnemyTowerNotification 알림 패킷을 전송
+ * @param {{socket: net.Socket, payload: {x: number, y: number}}}
+ */
 const towerPurchaseHandler = ({ socket, payload }) => {
   try {
     const { x, y } = payload;
