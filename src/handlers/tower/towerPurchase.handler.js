@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
-import { createAddEnemyTowerNotification } from '../../utils/notification/makeNotification.js';
+import { createAddEnemyTowerNotification } from '../../utils/notification/tower.notification.js';
 import Result from '../result.js';
 
 const { PacketType } = configs;

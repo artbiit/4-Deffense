@@ -1,4 +1,4 @@
-import { makeNotification } from './makeNotification.js';
+import makeNotification from './makeNotification.js';
 import configs from '../../configs/configs.js';
 
 /**
