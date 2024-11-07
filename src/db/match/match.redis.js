@@ -33,13 +33,13 @@ export const enqueueMatchMaking = async (userId, bestScore) => {
 export const dequeueMatchMaking = async () => {
   const redis = await getRedis();
 
-  const userId = await redis.lPop(WAITING_KEY);
+  const userId = await redis.lpop(WAITING_KEY);
   if (!userId) {
     logger.warn('dequeueMatchMaking. lPop is empty');
     return null;
   }
 
-  const userScore = await redis.zScore(MATCH_SCORE_KEY, userId);
+  const userScore = await redis.zscore(MATCH_SCORE_KEY, userId);
 
   if (!userScore) {
     logger.warn(`dequeueMatchMaking. could not found Score : ${userId}`);
@@ -52,21 +52,21 @@ export const dequeueMatchMaking = async () => {
 /** 대기열 인원 수 반환 */
 export const getQueueCount = async () => {
   const redis = await getRedis();
-  const queueLength = await redis.lLen(WAITING_KEY);
+  const queueLength = await redis.llen(WAITING_KEY);
   return queueLength;
 };
 
 /** 해당 유저 정보 제거 */
 export const removeUserScore = async (userId) => {
   const redis = await getRedis();
-  const removedCount = await redis.zRem(MATCH_SCORE_KEY, userId);
+  const removedCount = await redis.zrem(MATCH_SCORE_KEY, userId);
   return removedCount;
 };
 
 /** 범위내 유저 정보 탐색 */
 export const GetUsersByScoreRange = async (minScore, maxScore, limit = 10) => {
   const redis = await getRedis();
-  return await redis.zRangeByScore(MATCH_SCORE_KEY, minScore, maxScore, {
+  return await redis.zrangebyscore(MATCH_SCORE_KEY, minScore, maxScore, {
     WITHSCORES: true,
     LIMIT: {
       offset: 0, // 시작 위치
@@ -77,7 +77,7 @@ export const GetUsersByScoreRange = async (minScore, maxScore, limit = 10) => {
 
 export const getUserScore = async (userId) => {
   const redis = await getRedis();
-  return await redis.zScore(MATCH_SCORE_KEY, userId);
+  return await redis.zscore(MATCH_SCORE_KEY, userId);
 };
 
 /**
@@ -89,8 +89,8 @@ export const removeUsers = async (...userIds) => {
   const multi = redis.multi();
 
   for (const userId of userIds) {
-    multi.lRem(WAITING_KEY, 0, userId);
-    multi.zRem(MATCH_SCORE_KEY, userId);
+    multi.lrem(WAITING_KEY, 0, userId);
+    multi.zrem(MATCH_SCORE_KEY, userId);
   }
   await multi.exec();
 };

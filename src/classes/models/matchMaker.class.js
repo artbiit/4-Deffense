@@ -1,6 +1,6 @@
 import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
-import { getRedis } from '../../db/redis.js';
+import { getRedis, getSubscriberRedis } from '../../db/redis.js';
 import {
   dequeueMatchMaking,
   getQueueCount,
@@ -16,7 +16,7 @@ class MatchMaker {
   constructor() {}
 
   async init() {
-    const redis = await getRedis();
+    const redis = await getSubscriberRedis();
     await redis.subscribe(REDIS_MATCH_REQUEST_CHANNEL);
     redis.on('message', async (channel, message) => {
       if (channel === REDIS_MATCH_REQUEST_CHANNEL) {
@@ -92,3 +92,6 @@ class MatchMaker {
     }
   };
 }
+
+const matchMaker = new MatchMaker();
+export default matchMaker;
