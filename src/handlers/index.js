@@ -2,6 +2,7 @@ import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { registerRequestHandler, registerResponseHandler } from './register.handler.js';
+import { loginRequestHandler, loginResponseHandler } from './login.handler.js';
 
 const { PacketType } = configs;
 
@@ -17,12 +18,12 @@ const handlers = {
     fieldName: 'registerResponse',
   },
   [PacketType.LOGIN_REQUEST]: {
-    handler: undefined,
+    handler: loginRequestHandler,
     protoType: 'C2SLoginRequest',
     fieldName: 'loginRequest',
   },
   [PacketType.LOGIN_RESPONSE]: {
-    handler: undefined,
+    handler: loginResponseHandler,
     protoType: 'S2CLoginResponse',
     fieldName: 'loginResponse',
   },

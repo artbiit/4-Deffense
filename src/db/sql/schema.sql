@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS accounts
 (
     seq_no     INT AUTO_INCREMENT PRIMARY KEY,
-    id         VARCHAR(36) UNIQUE NOT NULL,
+    id         VARCHAR(36) COLLATE utf8_bin UNIQUE NOT NULL,
     password   VARCHAR(255) NOT NULL,
     email      VARCHAR(255),
     bestScore  INT DEFAULT 0,
