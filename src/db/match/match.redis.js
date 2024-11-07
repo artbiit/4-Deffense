@@ -15,7 +15,7 @@ export const enqueueMatchMaking = async (userId, bestScore) => {
     throw new Error('userId must be defined');
   }
 
-  if (!bestScore || Number.isNaN(bestScore)) {
+  if (bestScore === undefined || bestScore === null || Number.isNaN(bestScore)) {
     throw new Error(`bestScore must be defined : ${bestScore}[${typeof bestScore}]`);
   }
   const redis = await getRedis();

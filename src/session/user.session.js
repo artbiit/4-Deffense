@@ -6,12 +6,14 @@ import { cacheUserToken, unlinkUserToken } from '../db/user/user.db.js';
 
 export const userSessions = [];
 
-export const addUser = async (socket, uuid, token) => {
+export const addUser = async (socket, userByDB, token) => {
+  const uuid = userByDB.seqNo;
+
   await cacheUserToken(uuid, token);
-  const user = new User(uuid, socket);
+  const user = new User(uuid, socket, userByDB.bestScore);
   userSessions.push(user);
   gamesJoinedbyUsers.set(user, undefined);
-  return user;
+  return userByDB;
 };
 
 export const removeUser = async (socket) => {

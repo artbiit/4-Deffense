@@ -38,8 +38,9 @@ export const loginRequestHandler = async ({ socket, payload }) => {
         issuer: JWT_ISSUER,
         audience: JWT_AUDIENCE,
       });
+
       // 토큰 캐싱
-      await addUser(socket, userByDB.seqNo, token);
+      await addUser(socket, userByDB, token);
 
       // 성공 메시지
       message = '로그인에 성공 했습니다.';
