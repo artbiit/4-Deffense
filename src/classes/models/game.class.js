@@ -53,6 +53,15 @@ class Game {
     }
   }
 
+  /**
+   * 상대방 유저를 조회하는 함수
+   * @param {string} userId 기준이 되는 유저의 ID
+   * @returns {User} 상대방 유저
+   */
+  getOpponent(userId) {
+    return this.users.filter((user) => user.id !== userId)[0];
+  }
+
   addTower(user, tower) {
     this.towers[user].push(tower);
   }
