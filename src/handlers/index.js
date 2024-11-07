@@ -1,6 +1,7 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
 import { matchRequestHandler } from './matchRequest.handler.js';
 
 const { PacketType } = configs;
@@ -72,7 +73,7 @@ const handlers = {
     fieldName: 'spawnEnemyMonsterNotification',
   },
   [PacketType.TOWER_ATTACK_REQUEST]: {
-    handler: undefined,
+    handler: towerAttackRequestHandler,
     protoType: 'C2STowerAttackRequest',
     fieldName: 'towerAttackRequest',
   },
@@ -82,7 +83,7 @@ const handlers = {
     fieldName: 'enemyTowerAttackNotification',
   },
   [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
-    handler: undefined,
+    handler: monsterAttackBaseRequestHandler,
     protoType: 'C2SMonsterAttackBaseRequest',
     fieldName: 'monsterAttackBaseRequest',
   },
