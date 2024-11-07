@@ -1,15 +1,9 @@
-import { RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { getUserBySocket } from '../../session/user.session.js';
-import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
-import { createResponse } from '../../utils/response/createResponse.js';
-import { getGameAssets } from '../../init/loadAssets.js';
 import configs from '../../configs/configs.js';
-
+import Result from '../result.js';
 
 const { PacketType } = configs;
-
 
 // 클라에서 대미지를 깎고 monsterId와 towerId를 담아서 보냄.
 // 그럼 towerId로 tower를 찾아서 해당 타워의 공격력을 바탕으로
@@ -26,20 +20,14 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     // 2. usersession에 socket으로 user를 찾는다.
     const user = getUserBySocket(socket);
     if (!user) {
-      throw new CustomError(
-        ErrorCodes.USER_NOT_FOUND,
-        '유저를 찾을 수 없습니다.by towerAttackRequestHandler',
-      );
+      throw new Error('유저를 찾을 수 없습니다. by towerAttackRequestHandler');
     }
     const userId = user.id;
 
     // 3. 유저로 게임을 찾는다
     const game = getGameSessionByUserId(userId);
     if (!game) {
-      throw new CustomError(
-        ErrorCodes.GAME_NOT_FOUND,
-        '게임을 찾을 수 없습니다. by towerAttackRequestHandler',
-      );
+      throw new Error('게임을 찾을 수 없습니다. by towerAttackRequestHandler');
     }
 
     // 4. 찾아낸 userId, monsterId 와 towerId로 해당하는 타워와 몬스터를 찾아낸다.
@@ -48,48 +36,24 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
 
     // 찾은 몬스터가 없다. 에러?
     if (!monster) {
-      throw new CustomError(
-        ErrorCodes.MISSING_FIELDS,
-        '해당하는 몬스터를 찾을 수 없습니다.by towerAttackRequestHandler',
-      );
+      throw new Error('해당하는 몬스터를 찾을 수 없습니다.by towerAttackRequestHandler');
     }
     // 찾은 타워가 없다. 에러?
     if (!tower) {
-      throw new CustomError(
-        ErrorCodes.MISSING_FIELDS,
-        '해당하는 타워를 찾을 수 없습니다.by towerAttackRequestHandler',
-      );
+      throw new Error('해당하는 타워를 찾을 수 없습니다.by towerAttackRequestHandler');
     }
 
     // 타워 공격력 - 몬스터 방어력
     // monster 클래스 내부에서 damage 입으면 방어력 빼는 계산을 할 것.
-
-    // 대미지 맞는지 검증?
-    // 클라에서 대미지가 넘어오는게 아니라 id로 넘어오는데 대미지 검증이 의미가 있나?
-    const { monsters, towers } = getGameAssets();
-    const monsterDef = monsters.data.find((mon) => mon.id === monster.id).def;
-    const towerPower = towers.data.find((tow) => tow.id === tower.id).Power;
-    const guessDamage = towerPower - monsterDef;
-    const realDamage = tower.getPower() - monster.getDef();
-
-    if (guessDamage !== realDamage) {
-      throw new CustomError(
-        ErrorCodes.MISSING_FIELDS,
-        '대미지 계산이 서로 다릅니다.by towerAttackRequestHandler',
-      );
-    }
-
-    monster.damage(realDamage);
+    const damage = tower.getPower() - monster.getDef();
+    monster.damage(damage);
 
     // 여기까지 타워가 몬스터에게 대미지를 입힌다. 까지 완료
-    // 추후에 할것 있나?
-    // 질문: HANDLER_IDS는 추가하지 않아도 되는것?
-    const towerAttackResponse = createResponse(RESPONSE_SUCCESS_CODE, user, {
-      message: `타워가 몬스터에게 성공적으로 공격했습니다.`,
-    });
-    socket.write(towerAttackResponse);
+    const message = `타워가 몬스터에게 성공적으로 공격했습니다. 피해량 : ${damage}`;
+
+    return new Result({ message }, PacketType.TOWER_ATTACK_REQUEST);
   } catch (error) {
-    handleError(PacketType.TOWER_ATTACK_REQUEST,error);
+    handleError(PacketType.TOWER_ATTACK_REQUEST, error);
   }
 };
 
@@ -104,31 +68,27 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     // 2. usersession에 socket으로 user를 찾는다.
     const user = getUserBySocket(socket);
     if (!user) {
-      throw new CustomError(
-        ErrorCodes.USER_NOT_FOUND,
-        '유저를 찾을 수 없습니다.by monsterAttackBaseRequestHandler',
-      );
+      throw new Error('유저를 찾을 수 없습니다.by monsterAttackBaseRequestHandler');
     }
     const userId = user.id;
 
     // 3. 유저로 게임을 찾는다
     const game = getGameSessionByUserId(userId);
     if (!game) {
-      throw new CustomError(
-        ErrorCodes.GAME_NOT_FOUND,
-        '게임을 찾을 수 없습니다. by monsterAttackBaseRequestHandler',
-      );
+      throw new Error('게임을 찾을 수 없습니다. by monsterAttackBaseRequestHandler');
     }
 
     // userId와 damage로 base에 damage준다.
     game.baseDamage(userId, damage);
 
-    // 여기까지 몬스터가 base에게 대미지를 주었다. 완료.
-    // 추후에 할것 있나?
-    const monsterAttackResponse = createResponse(RESPONSE_SUCCESS_CODE, user, {
-      message: `몬스터가 베이스에게 성공적으로 공격했습니다.`,
-    });
-    socket.write(monsterAttackResponse);
+    // 몬스터가 기지 공격하고 나면 클라이언트에서는 remove하고있다.
+    // 이걸 서버로 전달해주지 않아서 서버도 자체적으로 공격하면 지우려 했는데,
+    // payload에 damage만 담아주기때문에 해당하는 몬스터를 찾을수가 없다.
+
+    // 여기까지 몬스터가 base에게 대미지를 주었다.
+    const message = `몬스터가 base에게 성공적으로 공격했습니다. 피해량 : ${damage}`;
+    
+    return new Result({ message }, PacketType.MONSTER_ATTACK_BASE_REQUEST);
   } catch (error) {
     handleError(PacketType.MONSTER_ATTACK_BASE_REQUEST, error);
   }
