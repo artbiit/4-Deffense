@@ -13,7 +13,7 @@ const handlers = {
     fieldName: 'registerRequest',
   },
   [PacketType.REGISTER_RESPONSE]: {
-    handler: registerResponseHandler,
+    handler: undefined,
     protoType: 'S2CRegisterResponse',
     fieldName: 'registerResponse',
   },

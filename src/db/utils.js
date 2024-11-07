@@ -14,3 +14,30 @@ export const toCamelCase = (obj) => {
   // 객체도 배열도 아닌 경우, 원본 값을 반환
   return obj;
 };
+
+/**
+ * - 시간을 초 단위로 변환 해주는 함수
+ *
+ * 매개 변수(time)로 받은 시간을 초 단위로 변환 해주는 함수.
+ *
+ * @param {string} time - 시간
+ * @returns {number} 초 단위의 시간
+ */
+export const timeConversion = (time) => {
+  // 마지막 문자(시간 단위 부분) 추출
+  const timeString = time.slice(-1);
+  // 시간 문자열을 정수로 변환
+  const timeNumber = parseInt(time.slice(0, -1), 10);
+
+  // 시간 단위에 따라 시간 정수를 초 단위의 시간으로 변환
+  switch (timeString) {
+    case 'd': // 일 단위
+      return timeNumber * 86400;
+    case 'h': // 시간 단위
+      return timeNumber * 3600;
+    case 'm': // 분 단위
+      return timeNumber * 60;
+    default: // 초 단위
+      return timeNumber;
+  }
+};
