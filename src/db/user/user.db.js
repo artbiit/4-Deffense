@@ -1,6 +1,6 @@
 import { mysql } from '../mysql.js';
 import { SQL_QUERIES } from './user.queries.js';
-import { timeConversion, toCamelCase } from '../utils.js';
+import { toCamelCase, timeConversion, timeFormatting } from '../utils.js';
 import { getRedis } from '../redis.js';
 import configs from '../../configs/configs.js';
 const { JWT_EXPIRES_IN } = configs;
@@ -17,8 +17,8 @@ export const findUserByIdPw = async (userId, password) => {
 
 export const createUser = async (id, password, email) => {
   const bestScore = 0;
-  const created_at = Date.now();
-  const updated_at = Date.now();
+  const created_at = timeFormatting(new Date());
+  const updated_at = timeFormatting(new Date());
   return await mysql.execute(SQL_QUERIES.INSERT_USER, [
     id,
     password,

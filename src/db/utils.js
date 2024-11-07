@@ -16,10 +16,7 @@ export const toCamelCase = (obj) => {
 };
 
 /**
- * - 시간을 초 단위로 변환 해주는 함수
- *
- * 매개 변수(time)로 받은 시간을 초 단위로 변환 해주는 함수.
- *
+ * - 시간을 초 단위로 변환 해주는 함수(매개변수 예시 - '7d', '7h', '7m')
  * @param {string} time - 시간
  * @returns {number} 초 단위의 시간
  */
@@ -40,4 +37,13 @@ export const timeConversion = (time) => {
     default: // 초 단위
       return timeNumber;
   }
+};
+
+/**
+ * - new Date()를 'YYYY-MM-DD HH:MM:SS' 형식으로 변환 해주는 함수
+ * @param {string} time - 시간
+ * @returns {number} 초 단위의 시간
+ */
+export const timeFormatting = (time) => {
+  return time.toISOString().slice(0, 19).replace('T', ' ');
 };

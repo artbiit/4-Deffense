@@ -1,13 +1,11 @@
 import logger from '../utils/logger.js';
-import { mysql } from '../db/mysql.js';
-import { getRedis } from '../db/redis.js';
 import jwt from 'jsonwebtoken';
 import configs from '../configs/configs.js';
 import { GlobalFailCode } from '../constants/handlerIds.js';
 import { cacheUserToken, findUserByIdPw } from '../db/user/user.db.js';
 import Result from './result.js';
 
-// 환경 변수에서 JWT 설정 불러오기
+// 환경 변수에서 설정 불러오기
 const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE, PacketType } = configs;
 
 /**
@@ -19,37 +17,43 @@ const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE, Pac
  * @param {string} param.payload.password - 유저의 비밀번호
  * @returns {void} 별도의 반환 값은 없으며, 성공 여부와 메시지를 클라이언트에게 전송.
  */
-export const loginRequestHandler = async ({ socket, payload }) => {
+export const loginRequestHandler = async ({ payload }) => {
   const { id, password } = payload;
 
-  let failCode = GlobalFailCode.NONE;
-  let message = undefined;
+  // response data init
   let success = true;
+  let message = undefined;
   let token = '';
-  try {
-    const userByDB = await findUserByIdPw(id, password);
+  let failCode = GlobalFailCode.NONE;
 
+  try {
+    // 아이디와 비밀번호 기반으로 유저 찾기
+    const userByDB = await findUserByIdPw(id, password);
     if (userByDB) {
+      // 토큰 생성
       token = jwt.sign({ userId: id, seqNo: userByDB.seqNo }, JWT_SECRET, {
         expiresIn: JWT_EXPIRES_IN,
         algorithm: JWT_ALGORITHM,
         issuer: JWT_ISSUER,
         audience: JWT_AUDIENCE,
       });
-
+      // 토큰 캐싱
       await cacheUserToken(userByDB.seqNo, token);
+      // 성공 메시지
       message = '로그인에 성공 했습니다.';
       logger.info(`로그인 성공 : ${userByDB.seqNo}`);
     } else {
+      // 비밀번호가 틀렸을 경우
       success = false;
-      failCode = GlobalFailCode.AUTHENTICATION_FAILED;
       message = '아이디 혹은 비밀번호를 확인해주세요.';
+      failCode = GlobalFailCode.AUTHENTICATION_FAILED;
+      throw new Error(message);
     }
   } catch (error) {
-    logger.error(`loginRequestHandler Error: ${error.message}`);
     success = false;
-    failCode = GlobalFailCode.UNKNOWN_ERROR;
     message = '로그인 과정 중 문제가 발생했습니다.';
+    failCode = GlobalFailCode.UNKNOWN_ERROR;
+    logger.error(`loginRequestHandler Error: ${error.message}`);
   }
 
   return new Result({ success, message, token, failCode }, PacketType.LOGIN_RESPONSE);
