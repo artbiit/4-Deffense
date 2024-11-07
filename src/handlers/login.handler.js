@@ -8,7 +8,7 @@ import Result from './result.js';
 // 환경 변수에서 설정 불러오기
 const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE, PacketType } = configs;
 
-/**
+/***
  * - 로그인 요청(request) 함수
  *
  * 클라이언트에서 받은 로그인 정보를 통해 사용자를 인증(대소문자 구분)하고, 성공 시 JWT 토큰을 발급해주는 함수.

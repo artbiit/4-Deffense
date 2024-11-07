@@ -7,7 +7,7 @@ import Result from './result.js';
 // 환경 변수에서 설정 불러오기
 const { PacketType } = configs;
 
-/**
+/***
  * - 회원가입 요청(request) 함수
  *
  * 클라이언트에서 받은 회원가입 정보를 MySQL에 등록해주는 함수.
