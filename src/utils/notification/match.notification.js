@@ -26,4 +26,4 @@ message GameState {
   
  * 
  */
-export const createMatchNotification = () => {};
+export const createMatchNotification = async (gameSesion) => {};
