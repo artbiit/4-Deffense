@@ -1,17 +1,5 @@
-// import { handlerIds } from '../../handlers/index.js';
-// import { createResponse } from '../response/createResponse.js';
-
 import { PacketType } from '../../constants/header.js';
-
-// export const createLocationPacket = (users) => {
-//   return createResponse(handlerIds['gameNotification.LocationUpdate'], 0, { users }, null);
-// };
-
-// export const createPingPacket = (timestamp) => {
-//   return createResponse(handlerIds['common.Ping'], 0, { timestamp }, null);
-// };
-
-export const makeNotification = () => {};
+import { makeNotification } from './makeNotification.js';
 
 /**
  * S2CAddEnemyTowerNotification 패킷을 생성하는 함수
