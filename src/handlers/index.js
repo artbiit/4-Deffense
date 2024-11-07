@@ -1,6 +1,7 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { SpawnMonsterRequestHandler } from './monster/monsterSpawn.handler.js';
 
 const { PacketType } = configs;
 
@@ -56,7 +57,7 @@ const handlers = {
     fieldName: 'addEnemyTowerNotification',
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
-    handler: undefined,
+    handler: SpawnMonsterRequestHandler,
     protoType: 'C2SSpawnMonsterRequest',
     fieldName: 'spawnMonsterRequest',
   },
