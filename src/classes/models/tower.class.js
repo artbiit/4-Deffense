@@ -16,5 +16,9 @@ class Tower {
 
     this.power = towerData.Power;
   }
+
+  getPower() {
+    return this.power;
+  }
 }
 export default Tower;
