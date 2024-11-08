@@ -45,8 +45,8 @@ const towerPurchaseHandler = ({ socket, payload }) => {
     }
 
     // 적 타워 설치 알림 패킷 전송
-    const addEnemyTowerResponse = createAddEnemyTowerNotification(opponent, tower);
-    opponentSocket.write(addEnemyTowerResponse);
+    const addEnemyTowerNotification = createAddEnemyTowerNotification(opponent, tower);
+    opponentSocket.write(addEnemyTowerNotification);
 
     // 타워 설치 응답 패킷 전송
     const towerPurchaseResponseData = { towerId: tower.instanceId };
