@@ -6,6 +6,7 @@ import { getUserById } from '../../session/user.session.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
+
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -22,7 +23,9 @@ class Game {
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'inProgress'
+
     this.monsterSpawnInterval = 1000;
+
   }
 
   addUser(user) {
@@ -43,9 +46,11 @@ class Game {
       gold: 0,
     };
 
+
     this.#generatePath(this.users[user.id]);
 
     gamesJoinedbyUsers.set(user, this);
+
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
       console.log(this.users.length, ' - ', GAME_MAX_PLAYER);
@@ -66,6 +71,7 @@ class Game {
     this.users.length--;
     delete this.users[userId];
     this.intervalManager.removePlayer(userId);
+
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
 
@@ -113,6 +119,7 @@ class Game {
     return maxLatency;
   }
 
+
   getTower(userId, towerId) {
     return this.users[userId].towers[towerId];
   }
@@ -135,6 +142,16 @@ class Game {
     this.users[userId].monsters[id] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
+  }
+
+
+  baseDamage(userId, damage) {
+    this.bases[userId] -= damage;
+
+    if (this.bases[userId] <= 0) {
+      // 베이스 펑
+      // 게임종료.
+    }
   }
 
   #generatePath = (gameUser) => {
@@ -209,6 +226,7 @@ class Game {
       basePosition: gameUser.basePosition,
     };
   };
+
 }
 
 export default Game;
