@@ -5,7 +5,7 @@ class Tower {
    * @param {{x: Number, y: Number}} coord 설치할 좌표
    */
   constructor(coords) {
-    this.id = uuidv4();
+    this.instanceId = uuidv4();
 
     this.x = coords.x;
     this.y = coords.y;
