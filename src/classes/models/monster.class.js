@@ -1,11 +1,15 @@
-import { getGameAssets } from '../../utils/asset/getAssets.js';
+import { getGameAsset } from '../../utils/asset/getAssets.js';
+import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
+
+const { ASSET_TYPE } = configs;
 class Monster {
   constructor(id, monsterNumber, level = 1) {
     this.id = id;
 
     const monsterId = `MON${String(monsterNumber).padStart(5, '0')}`;
-    const monsterData = getGameAssets().monsters.find((monster) => monster.id === monsterId);
+    const monsters = getGameAsset(ASSET_TYPE.MONSTER);
+    const monsterData = monsters.find((monster) => monster.id === monsterId);
     if (!monsterData) throw new Error(`${monsterId}라는 몬스터가 존재하지 않습니다.`);
 
     this.monsterId = monsterId;
