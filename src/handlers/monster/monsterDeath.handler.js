@@ -4,9 +4,16 @@ import { getUserBySocket } from '../../session/user.session.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handleError } from '../../utils/error/errorHandler.js';
+import { createEnemyMonsterDeathNotification } from '../../utils/notification/monster.notification.js';
 
 const { PacketType } = configs;
 
+/**
+ * C2SMonsterDeathNotification 알림을 받아서 다음 작업을 수행하는 핸들러:
+ * 1. 해당 몬스터가 실제로 죽었는지 검증
+ * 2. 상대방 유저에게 S2CEnemyMonsterDeathNotification 알림 패킷을 전송
+ * @param {{socket: net.Socket, payload: {monsterId: number}}}
+ */
 const monsterDeathHandler = ({ socket, payload }) => {
   try {
     const { monsterId } = payload;
@@ -40,7 +47,16 @@ const monsterDeathHandler = ({ socket, payload }) => {
       throw new CustomError(ErrorCodes.MONSTER_NOT_DEAD, '몬스터가 죽지 않았습니다.');
     }
 
-    // INCOMPLETE: 상대방에게 적 몬스터 처치 알림
+    // 검증: 상대방 유저가 존재함
+    const opponent = gameSession.getOpponent(user.id);
+    const opponentSocket = opponent.socket;
+    if (!opponent || !opponentSocket) {
+      throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
+    }
+
+    // 상대방에게 적 몬스터 처치 알림 패킷 전송
+    const enemyTowerDeathNotification = createEnemyMonsterDeathNotification(opponent, monster);
+    opponentSocket.write(enemyTowerDeathNotification);
   } catch (error) {
     handleError(PacketType.MONSTER_DEATH_NOTIFICATION, error);
   }
