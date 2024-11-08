@@ -43,7 +43,7 @@ const monsterDeathHandler = ({ socket, payload }) => {
     }
 
     // 검증: 몬스터가 실제로 사망함
-    if (!monster.isAlive) {
+    if (monster.isAlive) {
       throw new CustomError(ErrorCodes.MONSTER_NOT_DEAD, '몬스터가 죽지 않았습니다.');
     }
 
