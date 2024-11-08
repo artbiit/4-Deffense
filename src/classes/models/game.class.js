@@ -3,7 +3,7 @@ import configs from '../../configs/configs.js';
 import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
-import { getGameAssets } from '../../init/loadAssets.js';
+import { getGameAsset } from '../../utils/asset/getAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
 // import {
@@ -11,7 +11,7 @@ import { matchSuccessNotification } from '../../utils/notification/match.notific
 //   gameStartNotification,
 // } from '../../utils/notification/game.notification.js';
 
-const { GAME_MAX_PLAYER } = configs;
+const { GAME_MAX_PLAYER, ASSET_TYPE } = configs;
 
 class Game {
   constructor(id) {
@@ -33,7 +33,7 @@ class Game {
       throw new Error('Game session is full');
     }
 
-    const { bases } = getGameAssets();
+    const bases = getGameAsset(ASSET_TYPE.BASE);
 
     this.users.length++;
     this.users[user.id] = {
