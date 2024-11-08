@@ -3,6 +3,7 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
 import { getGameSessionByUserId } from '../../session/game.session.js';
+import { createEnemyTowerAttackNotification } from '../../utils/notification/attack.notification.js';
 
 const { PacketType } = configs;
 
@@ -51,7 +52,7 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
 
     // 내타워가 어떤 몬스터를 공격했는지 상대방에게 알려야함.
     // createEnemyTowerAttackNotification()
-    const notification = createAddEnemyTowerNotification(monsterId, towerId, user);
+    const notification = createEnemyTowerAttackNotification(monsterId, towerId, user);
     const opponentSocket = game.getOpponent(userId);
 
     opponentSocket.write(notification);
