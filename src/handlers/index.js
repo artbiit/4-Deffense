@@ -1,13 +1,19 @@
 import configs from '../configs/configs.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { registerRequestHandler } from './register.handler.js';
+import { loginRequestHandler } from './login.handler.js';
+import {monsterAttackBaseRequestHandler, towerAttackRequestHandler} from "./attack/attack.handler.js";
 import { matchRequestHandler } from './matchRequest.handler.js';
+import towerPurchaseHandler from './tower/towerPurchase.handler.js';
+import { spawnMonsterRequestHandler } from './monster/monsterSpawn.handler.js';
+
 
 const { PacketType } = configs;
 
 const handlers = {
   [PacketType.REGISTER_REQUEST]: {
-    handler: undefined,
+    handler: registerRequestHandler,
     protoType: 'C2SRegisterRequest',
     fieldName: 'registerRequest',
   },
@@ -17,7 +23,7 @@ const handlers = {
     fieldName: 'registerResponse',
   },
   [PacketType.LOGIN_REQUEST]: {
-    handler: undefined,
+    handler: loginRequestHandler,
     protoType: 'C2SLoginRequest',
     fieldName: 'loginRequest',
   },
@@ -42,7 +48,7 @@ const handlers = {
     fieldName: 'stateSyncNotification',
   },
   [PacketType.TOWER_PURCHASE_REQUEST]: {
-    handler: undefined,
+    handler: towerPurchaseHandler,
     protoType: 'C2STowerPurchaseRequest',
     fieldName: 'towerPurchaseRequest',
   },
@@ -57,7 +63,7 @@ const handlers = {
     fieldName: 'addEnemyTowerNotification',
   },
   [PacketType.SPAWN_MONSTER_REQUEST]: {
-    handler: SpawnMonsterRequestHandler,
+    handler: spawnMonsterRequestHandler,
     protoType: 'C2SSpawnMonsterRequest',
     fieldName: 'spawnMonsterRequest',
   },
@@ -72,7 +78,7 @@ const handlers = {
     fieldName: 'spawnEnemyMonsterNotification',
   },
   [PacketType.TOWER_ATTACK_REQUEST]: {
-    handler: undefined,
+    handler: towerAttackRequestHandler,
     protoType: 'C2STowerAttackRequest',
     fieldName: 'towerAttackRequest',
   },
@@ -82,7 +88,7 @@ const handlers = {
     fieldName: 'enemyTowerAttackNotification',
   },
   [PacketType.MONSTER_ATTACK_BASE_REQUEST]: {
-    handler: undefined,
+    handler: monsterAttackBaseRequestHandler,
     protoType: 'C2SMonsterAttackBaseRequest',
     fieldName: 'monsterAttackBaseRequest',
   },

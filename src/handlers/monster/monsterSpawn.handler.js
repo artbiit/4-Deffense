@@ -5,7 +5,7 @@ import { monsterSpawnNotification } from '../../utils/notification/monster.notif
 
 const { PacketType } = config;
 
-export const SpawnMonsterRequestHandler = ({ socket, payload }) => {
+export const spawnMonsterRequestHandler = ({ socket, payload }) => {
   // 1~5 사이의 monsterNumber 생성
   const monsterNumber = Math.floor(Math.random() * 5) + 1;
 
