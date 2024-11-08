@@ -5,9 +5,9 @@ import logger from '../../utils/logger.js';
 const { REDIS_MATCH_REQUEST_CHANNEL } = configs;
 
 /**매치메이킹 대기열 키*/
-const WAITING_KEY = 'match_queue-22222222';
+const WAITING_KEY = 'match_queue';
 /** 매치메이킹 점수 정렬 키 */
-const MATCH_SCORE_KEY = 'match_scores-2222222';
+const MATCH_SCORE_KEY = 'match_scores';
 
 /**매치메이킹 등록 함수 */
 export const enqueueMatchMaking = async (userId, bestScore) => {
