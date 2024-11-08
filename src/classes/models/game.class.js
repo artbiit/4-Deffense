@@ -52,7 +52,6 @@ class Game {
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
-      console.log(this.users.length, ' - ', GAME_MAX_PLAYER);
       setTimeout(() => {
         this.startGame();
       }, 1000);
@@ -206,7 +205,7 @@ class Game {
       return null;
     }
 
-    const { bases } = getGameAssets();
+    const bases = getGameAsset(ASSET_TYPE.BASE);
     const user = gameUser.user;
     return {
       gold: gameUser.gold,
