@@ -14,6 +14,7 @@ const {
 } = configs;
 
 export const onData = (socket) => async (data) => {
+  console.log(`Entered onData`);
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
   while (socket.buffer.length >= PACKET_TOTAL_LENGTH) {
@@ -43,16 +44,21 @@ export const onData = (socket) => async (data) => {
         result = handleError(packetType, error);
       } finally {
         if (result) {
+          console.log(`enterred on.Data -> finally`);
+          console.log('result:', result);
           const response = createResponse(
             result.responseType,
             getUserBySocket(socket),
             result.payload,
           );
+          console.log('response:', response);
           socket.write(response);
+          console.log(`successfully sent packet`);
         }
       }
     } else {
       break;
     }
   }
+  console.log(`Exitting onData`);
 };
