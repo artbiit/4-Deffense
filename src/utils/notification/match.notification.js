@@ -36,7 +36,7 @@ message BaseData {
  * 
  */
 export const matchSuccessNotification = async (gameSession) => {
-  let user = null;
+  let gameUser = null;
   try {
     const users = gameSession.users;
 
@@ -54,24 +54,24 @@ export const matchSuccessNotification = async (gameSession) => {
       if (keys[i] == 'length') {
         continue;
       }
-      user = users[keys[i]];
-      const socket = user.user.socket;
+      gameUser = users[keys[i]];
+      const socket = gameUser.user.socket;
       const playerData = {
-        gold: user.gold,
+        gold: gameUser.gold,
         base: {
           hp: bases.data[0].maxHp,
           maxHp: bases.data[0].maxHp,
         },
-        highScore: user.user.bestScore,
+        highScore: gameUser.user.bestScore,
         towers: [],
         monsters: [],
         monsterLevel: gameSession.monsterLevel,
         score: 0,
-        monsterPath: user.monsterPath,
-        basePosition: user.basePosition,
+        monsterPath: gameUser.monsterPath,
+        basePosition: gameUser.basePosition,
       };
 
-      const opponent = gameSession.getOpponent(user.user.id);
+      const opponent = gameSession.getOpponent(gameUser.user.id);
       const opponentData = {
         gold: opponent.gold,
         base: {
@@ -87,15 +87,19 @@ export const matchSuccessNotification = async (gameSession) => {
         basePosition: opponent.basePosition,
       };
 
-      const data = makeNotification(PacketType.MATCH_START_NOTIFICATION, {
-        initialGameState,
-        playerData,
-        opponentData,
-      });
+      const data = makeNotification(
+        PacketType.MATCH_START_NOTIFICATION,
+        {
+          initialGameState,
+          playerData,
+          opponentData,
+        },
+        gameUser.user,
+      );
       socket.write(data);
     }
   } catch (error) {
-    let userData = user ? JSON.stringify(user) : '';
+    let userData = gameUser ? JSON.stringify(gameUser) : '';
     logger.error(`matchSuccessNotification. failed notification : ${error} : ${userData}`);
   }
 };
