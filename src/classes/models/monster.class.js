@@ -1,5 +1,5 @@
 import { getGameAssets } from '../../utils/asset/getAssets.js';
-
+import logger from '../../utils/logger.js';
 class Monster {
   constructor(id, monsterNumber, level = 1) {
     this.id = id;
