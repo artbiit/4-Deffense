@@ -1,6 +1,7 @@
 import { addMonsterToGameSession } from '../../session/game.session.js';
 import config from '../../configs/configs.js';
 import Result from '../result.js';
+import { monsterSpawnNotification } from '../../utils/notification/monster.notification.js';
 
 const { PacketType } = config;
 
@@ -11,8 +12,16 @@ export const SpawnMonsterRequestHandler = ({ socket, payload }) => {
   // 게임 세션에 몬스터 추가
   const monsterId = addMonsterToGameSession(socket, monsterNumber);
 
+  // 몬스터 스폰 응답 패킷 전송(S2CSpawnMonsterResponse)
   if (monsterId) {
     console.log(`몬스터 추가 됨 : ${monsterId}`);
+
+    // 상대 몬스터 Notification 패킷 전송(S2CSpawnEnemymonsterNotification)
+    const notification = monsterSpawnNotification(monsterId, monsterNumber, user);
+
+    const opponentUser = game.getOpponent(userId);
+    opponentUser.socket.write(notification);
+
     const result = new Result({ monsterId, monsterNumber }, PacketType.SPAWN_MONSTER_RESPONSE);
     return result;
   }
