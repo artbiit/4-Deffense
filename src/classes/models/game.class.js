@@ -60,6 +60,10 @@ class Game {
   }
 
   removeUser(userId) {
+    if (this.users.length == 0) {
+      return;
+    }
+    this.users.length--;
     delete this.users[userId];
     this.intervalManager.removePlayer(userId);
     const user = getUserById(userId);
