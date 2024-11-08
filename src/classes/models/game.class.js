@@ -86,8 +86,12 @@ class Game {
     return maxLatency;
   }
 
-  getTower(userId, towerId) {}
-  getMonster(userId, monsterId) {}
+  getTower(userId, towerId) {
+    return this.users[userId].towers[towerId];
+  }
+  getMonster(userId, monsterId) {
+    return this.users[userId].monsters[monsterId];
+  }
 
   startGame() {}
 
