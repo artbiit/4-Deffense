@@ -23,7 +23,6 @@ export const spawnMonsterRequestHandler = ({ socket, payload }) => {
     const notification = monsterSpawnNotification(monsterId, monsterNumber, user);
 
     const opponentUser = game.getOpponent(user.id);
-    console.log(opponentUser);
     opponentUser.user.socket.write(notification);
 
     const result = new Result({ monsterId, monsterNumber }, PacketType.SPAWN_MONSTER_RESPONSE);
