@@ -1,4 +1,4 @@
-import { ASSET_TYPE } from '../../constants/assets.js';
+import { ASSET_ID_PREFIX, ASSET_TYPE } from '../../constants/assets.js';
 import { gameAssets } from '../../init/loadAssets.js';
 import CustomError from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
@@ -66,7 +66,10 @@ export const getGameAssetById = (assetType, id = '') => {
  * @returns {JSON} 해당 id의 데이터 ( 예시: { id: "MON00002", DisplayName: "흰눈애벌레", Description: "약한 벌레", ... } )
  */
 export const getRandomGameAsset = (assetType) => {
-  const numItems = getGameAsset(assetType).length;
-  const randomId = Math.floor(Math.random() * numItems);
+  const numItems = getGameAsset(assetType).data.length;
+  const randIndex = Math.floor(Math.random() * numItems);
+
+  const randomId = `${ASSET_ID_PREFIX[assetType]}${String(randIndex).padStart(5, '0')}`;
+
   return getGameAssetById(assetType, randomId);
 };

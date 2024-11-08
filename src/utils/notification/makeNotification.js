@@ -18,6 +18,13 @@ const {
  * @returns
  */
 const makeNotification = (packetType, payload, user) => {
+  if (packetType === 8 || packetType === 9 || packetType === 10) {
+    console.log(`Entered makeNotification`);
+    console.log(`packetType: ${packetType}`);
+    console.log(`payload: ${JSON.stringify(payload, null, 2)}`);
+    console.log(`user: ${JSON.stringify(user, null, 2)}`);
+  }
+
   const packetTypeBuffer = Buffer.alloc(PACKET_TYPE_LENGTH);
   packetTypeBuffer.writeUintBE(packetType, 0, PACKET_TYPE_LENGTH);
 
