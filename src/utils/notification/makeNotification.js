@@ -27,7 +27,7 @@ const makeNotification = (packetType, payload, user) => {
   const packetTypeBuffer = Buffer.alloc(PACKET_TYPE_LENGTH);
   packetTypeBuffer.writeUintBE(packetType, 0, PACKET_TYPE_LENGTH);
 
-  const version = CLIENT_VERSIONS;
+  const version = CLIENT_VERSIONS[0];
   const versionBuffer = Buffer.from(version);
   const versionLengthBuffer = Buffer.alloc(PACKET_VERSION_LENGTH);
   versionLengthBuffer.writeUintBE(versionBuffer.length, 0, PACKET_VERSION_LENGTH);
