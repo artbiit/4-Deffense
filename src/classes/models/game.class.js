@@ -4,7 +4,7 @@ import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
 import Tower from './tower.class.js';
-import { getGameAssets } from '../../init/loadAssets.js';
+import { getGameAsset } from '../../utils/asset/getAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
 // import {
@@ -12,7 +12,7 @@ import { matchSuccessNotification } from '../../utils/notification/match.notific
 //   gameStartNotification,
 // } from '../../utils/notification/game.notification.js';
 
-const { GAME_MAX_PLAYER } = configs;
+const { GAME_MAX_PLAYER, ASSET_TYPE } = configs;
 
 class Game {
   constructor(id) {
@@ -34,7 +34,7 @@ class Game {
       throw new Error('Game session is full');
     }
 
-    const { bases } = getGameAssets();
+    const bases = getGameAsset(ASSET_TYPE.BASE);
 
     this.users.length++;
     this.users[user.id] = {
@@ -53,7 +53,6 @@ class Game {
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
-      console.log(this.users.length, ' - ', GAME_MAX_PLAYER);
       setTimeout(() => {
         this.startGame();
       }, 1000);
@@ -210,7 +209,7 @@ class Game {
       return null;
     }
 
-    const { bases } = getGameAssets();
+    const bases = getGameAsset(ASSET_TYPE.BASE);
     const user = gameUser.user;
     return {
       gold: gameUser.gold,
