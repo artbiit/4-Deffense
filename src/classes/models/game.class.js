@@ -6,7 +6,6 @@ import { getUserById } from '../../session/user.session.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
-
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -17,9 +16,11 @@ const { GAME_MAX_PLAYER } = configs;
 class Game {
   constructor(id) {
     this.id = id;
+
     this.users = {
       length: 0,
     };
+
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'inProgress'
@@ -118,7 +119,6 @@ class Game {
     });
     return maxLatency;
   }
-
 
   getTower(userId, towerId) {
     return this.users[userId].towers[towerId];
