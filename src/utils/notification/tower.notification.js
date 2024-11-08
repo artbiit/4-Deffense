@@ -11,5 +11,5 @@ export const createAddEnemyTowerNotification = (user, tower) => {
   const packetType = configs.PacketType.ADD_ENEMY_TOWER_NOTIFICATION;
   const { towerId, x, y } = tower;
   const payload = { towerId, x, y };
-  return makeNotification(packetType, user, payload);
+  return makeNotification(packetType, payload, user);
 };
