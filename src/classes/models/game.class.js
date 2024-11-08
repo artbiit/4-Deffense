@@ -94,9 +94,9 @@ class Game {
    * @param {User} user 타워를 설치한 유저
    * @param {Tower} tower 설치한 타워
    */
-  addTower(user, tower) {
-    this.users[user.id].towers.length++;
-    this.users[user.id].towers[tower.id] = tower;
+  addTower(userId, tower) {
+    this.users[userId].towers.length++;
+    this.users[userId].towers[tower.id] = tower;
   }
 
   getMaxLatency() {
