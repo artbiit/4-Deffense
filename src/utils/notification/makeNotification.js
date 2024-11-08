@@ -22,7 +22,6 @@ const makeNotification = (packetType, payload, user) => {
     console.log(`Entered makeNotification`);
     console.log(`packetType: ${packetType}`);
     console.log(`payload: ${JSON.stringify(payload, null, 2)}`);
-    console.log(`user: ${JSON.stringify(user, null, 2)}`);
   }
 
   const packetTypeBuffer = Buffer.alloc(PACKET_TYPE_LENGTH);
@@ -34,8 +33,9 @@ const makeNotification = (packetType, payload, user) => {
   versionLengthBuffer.writeUintBE(versionBuffer.length, 0, PACKET_VERSION_LENGTH);
 
   const sequenceBuffer = Buffer.alloc(PACKET_SEQUENCE_LENGTH);
+  console.log(`before user?.getNextSequence()`);
   sequenceBuffer.writeUintBE(user?.getNextSequence() || 0, 0, PACKET_SEQUENCE_LENGTH);
-
+  console.log(`after user?.getNextSequence()`);
   const protoMessages = getProtoMessages();
   const fieldName = getFieldNameByHandlerId(packetType);
   const data = {
