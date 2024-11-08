@@ -138,7 +138,7 @@ class Game {
   // 유저의 몬스터 추가
   addMonster(userId, monsterNumber) {
     //생성된 순서대로 번호를 부여하면 서로 겹칠일 없음.
-    const id = ++this.monsters[userId].length;
+    const id = ++this.users[userId].monsters.length;
     const monster = new Monster(id, monsterNumber, this.monsterLevel);
     this.users[userId].monsters[id] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
     //이 유저가아닌 상대 유저한테 noti해야함
