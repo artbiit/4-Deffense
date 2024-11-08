@@ -17,8 +17,6 @@ export const spawnMonsterRequestHandler = ({ socket, payload }) => {
   const game = getGameSessionBySocket(socket);
   // 몬스터 스폰 응답 패킷 전송(S2CSpawnMonsterResponse)
   if (monsterId) {
-    console.log(`몬스터 추가 됨 : ${monsterId}`);
-
     // 상대 몬스터 Notification 패킷 전송(S2CSpawnEnemymonsterNotification)
     const notification = monsterSpawnNotification(monsterId, monsterNumber, user);
 
