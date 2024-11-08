@@ -3,6 +3,7 @@ import configs from '../../configs/configs.js';
 import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
+import Tower from './tower.class.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
 
@@ -102,12 +103,15 @@ class Game {
 
   /**
    * 유저가 설치한 타워를 해당 게임의 타워목록에 추가하는 함수
-   * @param {User} user 타워를 설치한 유저
-   * @param {Tower} tower 설치한 타워
+   * @param {string} userId 타워를 설치한 유저의 ID
+   * @param {{x: Number, y: Number}} coords 설치할 좌표
    */
-  addTower(userId, tower) {
+  addTower(userId, coords) {
+    const instanceId = this.towers[userId].length + 1;
+    const tower = new Tower(instanceId, coords);
     this.users[userId].towers.length++;
     this.users[userId].towers[tower.id] = tower;
+    return tower;
   }
 
   getMaxLatency() {
