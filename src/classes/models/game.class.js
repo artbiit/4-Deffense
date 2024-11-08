@@ -43,14 +43,15 @@ class Game {
       gold: 0,
     };
 
+    this.#generatePath(this.users[user.id]);
+
     gamesJoinedbyUsers.set(user, this);
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-
     if (this.users.length == GAME_MAX_PLAYER) {
       console.log(this.users.length, ' - ', GAME_MAX_PLAYER);
       setTimeout(() => {
         this.startGame();
-      }, 3000);
+      }, 1000);
     }
   }
 
@@ -80,8 +81,9 @@ class Game {
     }
 
     const userKeys = Object.keys(this.users);
+
     for (let key of userKeys) {
-      if (key !== userId) {
+      if (key != userId) {
         return this.users[key];
       }
     }
@@ -130,6 +132,79 @@ class Game {
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
   }
+
+  #generatePath = (gameUser) => {
+    const path = [];
+
+    const pathCount = 25;
+    const maxX = 1370;
+
+    const yPosRange = { min: 201.0, max: 400.0 };
+    const xStep = maxX / pathCount;
+    const minVerticalDistance = 50;
+    const minHorizontalDistance = 100;
+
+    let isVertical = true;
+    let prevX = 0;
+    let prevY = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
+
+    for (let i = 0; i < pathCount - 1; i++) {
+      let x, y;
+      if (isVertical) {
+        x = prevX;
+        let yCandidate;
+        do {
+          yCandidate = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
+        } while (Math.abs(yCandidate - prevY) < minVerticalDistance);
+        y = yCandidate;
+      } else {
+        let xCandidate;
+        do {
+          xCandidate = Math.floor(i * xStep + Math.random() * xStep);
+        } while (Math.abs(xCandidate - prevX) < minHorizontalDistance);
+        x = xCandidate;
+        y = prevY;
+      }
+      path.push({ x, y });
+      prevX = x;
+      prevY = y;
+      isVertical = !isVertical;
+    }
+
+    // 마지막 경로는 기지 좌표로 이어지도록 설정
+    const basePos = {
+      x: maxX,
+      y: prevY,
+    };
+    path.push(basePos);
+
+    gameUser.monsterPath = path;
+    gameUser.basePosition = basePos;
+  };
+
+  getPlayerData = (userId) => {
+    const gameUser = this.users[userId];
+    if (!gameUser) {
+      return null;
+    }
+
+    const { bases } = getGameAssets();
+    const user = gameUser.user;
+    return {
+      gold: gameUser.gold,
+      base: {
+        hp: bases.data[0].maxHp,
+        maxHp: bases.data[0].maxHp,
+      },
+      highScore: user.bestScore,
+      towers: [],
+      monsters: [],
+      monsterLevel: this.monsterLevel,
+      score: 0,
+      monsterPath: gameUser.monsterPath,
+      basePosition: gameUser.basePosition,
+    };
+  };
 }
 
 export default Game;

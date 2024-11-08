@@ -2,6 +2,7 @@ import { getGameAssets } from '../../init/loadAssets.js';
 import makeNotification from './makeNotification.js';
 import configs from '../../configs/configs.js';
 import logger from '../logger.js';
+import { createResponse } from '../response/createResponse.js';
 const { PacketType } = configs;
 /**
  * message S2CMatchStartNotification {
@@ -55,48 +56,19 @@ export const matchSuccessNotification = async (gameSession) => {
         continue;
       }
       gameUser = users[keys[i]];
-      const socket = gameUser.user.socket;
-      const playerData = {
-        gold: gameUser.gold,
-        base: {
-          hp: bases.data[0].maxHp,
-          maxHp: bases.data[0].maxHp,
-        },
-        highScore: gameUser.user.bestScore,
-        towers: [],
-        monsters: [],
-        monsterLevel: gameSession.monsterLevel,
-        score: 0,
-        monsterPath: gameUser.monsterPath,
-        basePosition: gameUser.basePosition,
-      };
+      const user = gameUser.user;
+      const socket = user.socket;
+      const playerData = gameSession.getPlayerData(user.id);
 
-      const opponent = gameSession.getOpponent(gameUser.user.id);
-      const opponentData = {
-        gold: opponent.gold,
-        base: {
-          hp: bases.data[0].maxHp,
-          maxHp: bases.data[0].maxHp,
-        },
-        highScore: opponent.user.bestScore,
-        towers: [],
-        monsters: [],
-        monsterLevel: gameSession.monsterLevel,
-        score: 0,
-        monsterPath: opponent.monsterPath,
-        basePosition: opponent.basePosition,
-      };
+      const opponent = gameSession.getOpponent(user.id);
+      const opponentData = gameSession.getPlayerData(opponent.user.id);
 
-      const data = makeNotification(
-        PacketType.MATCH_START_NOTIFICATION,
-        {
-          initialGameState,
-          playerData,
-          opponentData,
-        },
-        gameUser.user,
-      );
-      socket.write(data);
+      const buffer = createResponse(PacketType.MATCH_START_NOTIFICATION, user, {
+        initialGameState,
+        playerData,
+        opponentData,
+      });
+      socket.write(buffer);
     }
   } catch (error) {
     let userData = gameUser ? JSON.stringify(gameUser) : '';
