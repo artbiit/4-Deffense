@@ -14,7 +14,7 @@ const { GAME_MAX_PLAYER } = configs;
 class Game {
   constructor(id) {
     this.id = id;
-    this.users = [];
+    this.users = []; // 유저별로 관리되는 타워 목록 (각 유저 ID를 키로 사용)
     this.monsters = {}; // 유저별로 관리되는 몬스터 목록 (각 유저 ID를 키로 사용)
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
@@ -31,7 +31,7 @@ class Game {
     this.monsters[user.id] = []; // 새로운 유저 추가 시 몬스터 목록 초기화
     gamesJoinedbyUsers.set(user, this);
 
-    this.towers[user] = [];
+    this.towers[user.id] = [];
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === GAME_MAX_PLAYER) {
@@ -75,7 +75,7 @@ class Game {
    * @param {Tower} tower 설치한 타워
    */
   addTower(user, tower) {
-    this.towers[user].push(tower);
+    this.towers[user.id].push(tower);
   }
 
   getMaxLatency() {
