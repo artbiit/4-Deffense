@@ -32,7 +32,7 @@ const monsterDeathHandler = ({ socket, payload }) => {
 
     // 검증: 게임이 진행중임
     const gameState = gameSession.state;
-    if (gameState != 'inProgess') {
+    if (gameState != 'in_progess') {
       throw new CustomError(ErrorCodes.GAME_NOT_IN_PROGRESS, `진행중인 게임이 아닙니다.`);
     }
 
@@ -49,7 +49,7 @@ const monsterDeathHandler = ({ socket, payload }) => {
 
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id);
-    const opponentSocket = opponent.socket;
+    const opponentSocket = opponent.user.socket;
     if (!opponent || !opponentSocket) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }

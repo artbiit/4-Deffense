@@ -4,7 +4,6 @@ import Monster from './monster.class.js';
 import { gamesJoinedbyUsers } from '../../session/sessions.js';
 import { getUserById } from '../../session/user.session.js';
 
-
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -19,10 +18,9 @@ class Game {
     this.monsters = {}; // 유저별로 관리되는 몬스터 목록 (각 유저 ID를 키로 사용)
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
-    this.state = 'waiting'; // 'waiting', 'inProgress'
+    this.state = 'waiting'; // 'waiting', 'in_progress'
     this.towers = {};
   }
-  
 
   addUser(user) {
     if (this.users.length >= GAME_MAX_PLAYER) {
@@ -34,7 +32,6 @@ class Game {
     gamesJoinedbyUsers.set(user, this);
 
     this.towers[user] = [];
-
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length === GAME_MAX_PLAYER) {
@@ -52,7 +49,7 @@ class Game {
     this.users = this.users.filter((user) => user.id !== userId);
     delete this.monsters[userId]; // 유저 제거 시 몬스터 목록도 삭제
     this.intervalManager.removePlayer(userId);
-    
+
     const user = getUserById(userId);
     gamesJoinedbyUsers.delete(user);
 
@@ -89,8 +86,8 @@ class Game {
     return maxLatency;
   }
 
-  getTower(userId, towerId){}
-  getMonster(userId, monsterId){}
+  getTower(userId, towerId) {}
+  getMonster(userId, monsterId) {}
 
   startGame() {}
 
