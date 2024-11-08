@@ -15,8 +15,11 @@ import { matchSuccessNotification } from '../../utils/notification/match.notific
 const { GAME_MAX_PLAYER, ASSET_TYPE } = configs;
 
 class Game {
+  #monsterPath = [];
+  #basePosition = {};
   constructor(id) {
     this.id = id;
+    this.#generatePath();
 
     this.users = {
       length: 0,
@@ -41,16 +44,11 @@ class Game {
       user,
       monsters: { length: 0 },
       towers: { length: 0 },
-      monsterPath: [],
-      basePosition: { x: 0, y: 0 },
       baseHp: bases.data[0].maxHp,
       gold: 0,
     };
 
-    this.#generatePath(this.users[user.id]);
-
     gamesJoinedbyUsers.set(user, this);
-
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
@@ -154,13 +152,13 @@ class Game {
     }
   }
 
-  #generatePath = (gameUser) => {
+  #generatePath = () => {
     const path = [];
 
     const pathCount = 25;
     const maxX = 1370;
 
-    const yPosRange = { min: 201.0, max: 400.0 };
+    const yPosRange = { min: 205.0, max: 400.0 };
     const xStep = maxX / pathCount;
     const minVerticalDistance = 50;
     const minHorizontalDistance = 100;
@@ -199,8 +197,8 @@ class Game {
     };
     path.push(basePos);
 
-    gameUser.monsterPath = path;
-    gameUser.basePosition = basePos;
+    this.#monsterPath = path;
+    this.#basePosition = basePos;
   };
 
   getPlayerData = (userId) => {
@@ -222,8 +220,8 @@ class Game {
       monsters: [],
       monsterLevel: this.monsterLevel,
       score: 0,
-      monsterPath: gameUser.monsterPath,
-      basePosition: gameUser.basePosition,
+      monsterPath: this.#monsterPath,
+      basePosition: this.#basePosition,
     };
   };
 }
