@@ -1,4 +1,4 @@
-import { getGameAssets } from '../../init/loadAssets.js';
+import { getGameAssets } from '../../utils/asset/getAssets.js';
 
 class Monster {
   constructor(id, monsterNumber, level = 1) {
