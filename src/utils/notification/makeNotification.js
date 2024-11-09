@@ -45,6 +45,7 @@ const makeNotification = (packetType, payload, user) => {
   const payloadLengthBuffer = Buffer.alloc(PACKET_PAYLOAD_LENGTH);
   payloadLengthBuffer.writeUintBE(payloadBuffer.length, 0, PACKET_PAYLOAD_LENGTH);
 
+  console.log(`Exitting makeNotification`);
   return Buffer.concat([
     packetTypeBuffer,
     versionLengthBuffer,

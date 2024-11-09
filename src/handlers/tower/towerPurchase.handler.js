@@ -43,20 +43,14 @@ const towerPurchaseHandler = ({ socket, payload }) => {
     if (!opponent || !opponentSocket) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }
-    console.log(`opponent found`);
-    console.log(`opponentSocket found`);
 
     // 적 타워 설치 알림 패킷 전송
     const addEnemyTowerNotification = createAddEnemyTowerNotification(opponent, tower);
-    console.log(`notification : ${addEnemyTowerNotification}`);
     opponentSocket.write(addEnemyTowerNotification);
-    console.log(`notification sent`);
 
     // 타워 설치 응답 패킷 전송
     const towerPurchaseResponseData = { towerId: tower.instanceId };
-    console.log(`towerPurchaseResponseData:`, towerPurchaseResponseData);
     const result = new Result(towerPurchaseResponseData, PacketType.TOWER_PURCHASE_RESPONSE);
-    console.log('result: ', result);
     return result;
   } catch (error) {
     handleError(PacketType.TOWER_PURCHASE_REQUEST, error);
