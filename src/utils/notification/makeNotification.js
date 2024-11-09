@@ -33,9 +33,7 @@ const makeNotification = (packetType, payload, user) => {
   versionLengthBuffer.writeUintBE(versionBuffer.length, 0, PACKET_VERSION_LENGTH);
 
   const sequenceBuffer = Buffer.alloc(PACKET_SEQUENCE_LENGTH);
-  console.log(`before user?.getNextSequence()`);
   sequenceBuffer.writeUintBE(user?.getNextSequence() || 0, 0, PACKET_SEQUENCE_LENGTH);
-  console.log(`after user?.getNextSequence()`);
   const protoMessages = getProtoMessages();
   const fieldName = getFieldNameByHandlerId(packetType);
   const data = {
