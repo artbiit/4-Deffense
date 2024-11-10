@@ -109,7 +109,7 @@ class Game {
     this.#towerCount++;
     const tower = new Tower(this.#towerCount, coords);
     const towers = this.users[userId].towers;
-    towers[++towers.length] = tower;
+    towers[this.#towerCount] = tower;
     return tower;
   }
 
@@ -141,7 +141,7 @@ class Game {
     this.#monsterCount++;
     const monster = new Monster(this.#monsterCount, monsterNumber, this.monsterLevel);
     const monsters = this.users[userId].monsters;
-    monsters[++monsters.length] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
+    monsters[this.#monsterCount] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
   }
