@@ -147,9 +147,12 @@ class Game {
   }
 
   baseDamage(userId, damage) {
-    this.bases[userId] -= damage;
+    const gameUser = this.users[userId];
 
-    if (this.bases[userId] <= 0) {
+    gameUser.baseHp -= damage;
+
+    if (gameUser.baseHp <= 0) {
+      gameUser.baseHp = 0;
       // 베이스 펑
       // 게임종료.
     }
