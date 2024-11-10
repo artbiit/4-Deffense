@@ -52,8 +52,9 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
 
     // 내타워가 어떤 몬스터를 공격했는지 상대방에게 알려야함.
     // createEnemyTowerAttackNotification()
-    const notification = createEnemyTowerAttackNotification(monsterId, towerId, user);
-    const opponentSocket = game.getOpponent(userId).user.socket;
+    const opponentUser = game.getOpponent(userId).user;
+    const notification = createEnemyTowerAttackNotification(monsterId, towerId, opponentUser);
+    const opponentSocket = opponentUser.socket;
 
     opponentSocket.write(notification);
   } catch (error) {
