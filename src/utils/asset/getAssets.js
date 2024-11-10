@@ -66,10 +66,9 @@ export const getGameAssetById = (assetType, id = '') => {
  * @returns {JSON} 해당 id의 데이터 ( 예시: { id: "MON00002", DisplayName: "흰눈애벌레", Description: "약한 벌레", ... } )
  */
 export const getRandomGameAsset = (assetType) => {
-  const numItems = getGameAsset(assetType).data.length;
+  const data = getGameAsset(assetType).data;
+  const numItems = data.length;
   const randIndex = Math.floor(Math.random() * numItems);
 
-  const randomId = `${ASSET_ID_PREFIX[assetType]}${String(randIndex).padStart(5, '0')}`;
-
-  return getGameAssetById(assetType, randomId);
+  return data[randIndex];
 };

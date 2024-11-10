@@ -17,6 +17,8 @@ const { GAME_MAX_PLAYER, ASSET_TYPE } = configs;
 class Game {
   #monsterPath = [];
   #basePosition = {};
+  #towerCount = 0;
+  #monsterCount = 0;
   constructor(id) {
     this.id = id;
     this.#generatePath();
@@ -28,7 +30,6 @@ class Game {
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
     this.state = 'waiting'; // 'waiting', 'in_progress'
-
     this.monsterSpawnInterval = 1000;
   }
 
@@ -105,10 +106,10 @@ class Game {
    * @param {{x: Number, y: Number}} coords 설치할 좌표
    */
   addTower(userId, coords) {
-    const instanceId = this.users[userId].towers.length + 1;
-    const tower = new Tower(instanceId, coords);
-    this.users[userId].towers.length++;
-    this.users[userId].towers[tower.instanceId] = tower;
+    this.#towerCount++;
+    const tower = new Tower(this.#towerCount, coords);
+    const towers = this.users[userId].towers;
+    towers[++towers.length] = tower;
     return tower;
   }
 
@@ -137,9 +138,10 @@ class Game {
   // 유저의 몬스터 추가
   addMonster(userId, monsterNumber) {
     //생성된 순서대로 번호를 부여하면 서로 겹칠일 없음.
-    const id = ++this.users[userId].monsters.length;
-    const monster = new Monster(id, monsterNumber, this.monsterLevel);
-    this.users[userId].monsters[id] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
+    this.#monsterCount++;
+    const monster = new Monster(this.#monsterCount, monsterNumber, this.monsterLevel);
+    const monsters = this.users[userId].monsters;
+    monsters[++monsters.length] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
   }

@@ -2,6 +2,7 @@ import Result from '../../handlers/result.js';
 import logger from '../logger.js';
 import configs from '../../configs/configs.js';
 import CustomError from './customError.js';
+import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 
 const { GlobalFailCode } = configs;
 
@@ -15,11 +16,14 @@ export const handleError = (packetType, error) => {
   if (error.code) {
     responseType = error.code;
     message = error.message;
-    logger.error(`[${packetType}]에러 코드: ${error.code}, 메시지: ${error.message}`);
-    return new Result({ message }, responseType);
+    logger.error(
+      `[${getProtoTypeNameByHandlerId(packetType)}/${packetType}]에러 코드: ${error.code}, 메시지: ${error.message}`,
+    );
+    // return new Result({ message }, responseType);
   } else {
     responseType = GlobalFailCode.UNKNOWN_ERROR;
     message = error.message;
-    logger.error(`[${packetType}]일반 에러: ${error}`);
+    logger.error(`[${getProtoTypeNameByHandlerId(packetType)}/${packetType}]일반 에러: ${error}`);
   }
+  console.error(error, '\n-------------------');
 };

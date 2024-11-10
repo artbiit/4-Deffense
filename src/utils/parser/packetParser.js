@@ -8,8 +8,7 @@ import { getUserBySocket } from '../../session/user.session.js';
 const { GlobalFailCode, CLIENT_VERSIONS } = configs;
 
 export const packetParser = (socket, packetType, version, sequence, payloadBuffer) => {
-  console.log(`Entered pakcetParser`);
-  console.log(`packetType : ${packetType}`);
+  console.log(`Entered PacketParser[${packetType}] : ${getProtoTypeNameByHandlerId(packetType)}`);
   //버전 호환 필터
   if (!CLIENT_VERSIONS.includes(version)) {
     throw new CustomError(GlobalFailCode.INVALID_REQUEST, 'VERSION_MISMATCH');
@@ -31,9 +30,9 @@ export const packetParser = (socket, packetType, version, sequence, payloadBuffe
     throw new CustomError(GlobalFailCode.INVALID_REQUEST, `패킷 디코딩 중 문제 발생 : GamePacket`);
   }
 
+  console.log(decodedGamePacket);
   const field = decodedGamePacket[getFieldNameByHandlerId(packetType)];
   const payload = { ...field };
-  console.log('payload:', payload);
 
   const typeName = getProtoTypeNameByHandlerId(packetType);
   const PayloadType = protoMessages[typeName];

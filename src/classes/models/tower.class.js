@@ -8,6 +8,7 @@ class Tower {
    */
   constructor(instanceId, coords) {
     const towerData = getRandomGameAsset(ASSET_TYPE.TOWER);
+    console.log(towerData);
     this.assetId = towerData.id;
     this.instanceId = instanceId;
 
