@@ -30,7 +30,6 @@ class Game {
     this.state = 'waiting'; // 'waiting', 'in_progress'
 
     this.monsterSpawnInterval = 1000;
-
   }
 
   addUser(user) {
@@ -39,7 +38,6 @@ class Game {
     }
 
     const bases = getGameAsset(ASSET_TYPE.BASE);
-
 
     this.users.length++;
     this.users[user.id] = {
@@ -107,10 +105,10 @@ class Game {
    * @param {{x: Number, y: Number}} coords 설치할 좌표
    */
   addTower(userId, coords) {
-    const instanceId = this.towers[userId].length + 1;
+    const instanceId = this.users[userId].towers.length + 1;
     const tower = new Tower(instanceId, coords);
     this.users[userId].towers.length++;
-    this.users[userId].towers[tower.id] = tower;
+    this.users[userId].towers[tower.instanceId] = tower;
     return tower;
   }
 

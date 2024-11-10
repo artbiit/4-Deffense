@@ -38,8 +38,8 @@ const towerPurchaseHandler = ({ socket, payload }) => {
     const tower = gameSession.addTower(user.id, { x, y });
 
     // 검증: 상대방 유저가 존재함
-    const opponent = gameSession.getOpponent(user.id);
-    const opponentSocket = opponent.user.socket;
+    const opponent = gameSession.getOpponent(user.id).user;
+    const opponentSocket = opponent.socket;
     if (!opponent || !opponentSocket) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }
