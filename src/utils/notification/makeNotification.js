@@ -18,12 +18,6 @@ const {
  * @returns
  */
 const makeNotification = (packetType, payload, user) => {
-  if (packetType === 8 || packetType === 9 || packetType === 10) {
-    console.log(`Entered makeNotification`);
-    console.log(`packetType: ${packetType}`);
-    console.log(`payload: ${JSON.stringify(payload, null, 2)}`);
-  }
-
   const packetTypeBuffer = Buffer.alloc(PACKET_TYPE_LENGTH);
   packetTypeBuffer.writeUintBE(packetType, 0, PACKET_TYPE_LENGTH);
 
@@ -45,7 +39,6 @@ const makeNotification = (packetType, payload, user) => {
   const payloadLengthBuffer = Buffer.alloc(PACKET_PAYLOAD_LENGTH);
   payloadLengthBuffer.writeUintBE(payloadBuffer.length, 0, PACKET_PAYLOAD_LENGTH);
 
-  console.log(`Exitting makeNotification`);
   return Buffer.concat([
     packetTypeBuffer,
     versionLengthBuffer,
