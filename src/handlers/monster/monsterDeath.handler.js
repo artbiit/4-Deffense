@@ -42,13 +42,6 @@ const monsterDeathHandler = ({ socket, payload }) => {
       throw new CustomError(ErrorCodes.MONSTER_NOT_FOUND, '몬스터를 찾을 수 없습니다.');
     }
 
-    // 검증: 이미 사망한 몬스터
-    if (!monster.isAlive) {
-      // throw new CustomError(ErrorCodes.MONSTER_ALREADY_DEAD, '이미 사망한 몬스터입니다.');
-    }
-
-    monster.isAlive = false;
-
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id).user;
     const opponentSocket = opponent.socket;
@@ -59,6 +52,8 @@ const monsterDeathHandler = ({ socket, payload }) => {
     // 상대방에게 적 몬스터 처치 알림 패킷 전송
     const enemyTowerDeathNotification = createEnemyMonsterDeathNotification(opponent, monster);
     opponentSocket.write(enemyTowerDeathNotification);
+
+    monster.isAlive = false;
   } catch (error) {
     handleError(PacketType.MONSTER_DEATH_NOTIFICATION, error);
   }
