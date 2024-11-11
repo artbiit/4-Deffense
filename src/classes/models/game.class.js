@@ -17,6 +17,7 @@ import {
   SPAWNS_PER_LEVEL,
   SYNC_INTERVAL,
 } from '../../constants/game.js';
+import { updateUserBestScoreById } from '../../db/user/user.db.js';
 
 // import {
 //   createLocationPacket,
@@ -208,16 +209,23 @@ class Game {
       // 게임종료.
 
       // * 나에게 게임 오버 알림
-      const myGameOverNotification = createGameOverNotification(false);
+      const myGameOverNotification = createGameOverNotification(false, gameUser.user);
       gameUser.user.socket.write(myGameOverNotification);
 
       // * 상대에게 게임 오버 알림
-      const opponentGameOverNotification = createGameOverNotification(true);
+      const opponentGameOverNotification = createGameOverNotification(true, opponent.user);
       opponent.user.socket.write(opponentGameOverNotification);
 
       // * 게임 세션에서 삭제
       this.intervalManager.removePlayer(gameUser.user.id);
       this.intervalManager.removePlayer(opponent.user.id);
+
+      Promise.all([
+        updateUserBestScoreById(gameUser.user.id, gameUser.score, gameUser.user.bestScore),
+        updateUserBestScoreById(opponent.user.id, opponent.score, opponent.user.bestScore),
+      ]).then(() => {
+        console.log('[ DB UPDATE ] USER BEST SCORE UPDATED !! ');
+      });
     }
     return gameUser.baseHp;
   }

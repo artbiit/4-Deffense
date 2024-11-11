@@ -48,3 +48,17 @@ export const getUserToken = async (seqNo) => {
   const redis = await getRedis();
   return await redis.get(`user:${seqNo}:accessToken`);
 };
+
+/**
+ * 유저 최고점수 수정
+ * @param {number} seqNo
+ * @param {number} score
+ * @param {number} bestScore
+ * @returns
+ */
+export const updateUserBestScoreById = async (seqNo, score, bestScore) => {
+  if (score <= bestScore) {
+    return;
+  }
+  return await mysql.execute(SQL_QUERIES.UPDATE_USER_BEST_SCORE_BY_ID, [score, seqNo]);
+};
