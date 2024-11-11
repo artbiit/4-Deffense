@@ -60,7 +60,7 @@ class Game {
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
-      this.intervalManager.monsterLevelInterval(user.id, this.stateSync(user), 1000);
+      this.intervalManager.monsterLevelInterval(user.id, this.stateSync.bind(this, user), 1000);
       setTimeout(() => {
         this.startGame();
       }, 1000);
@@ -70,12 +70,16 @@ class Game {
   stateSync(user) {
     // 검증: 게임이 시작했는가?(조건 변경 필요)
     if (this.state != 'in_progress') {
-      return '게임이 아직 시작되지 않았습니다.';
+      console.error('게임이 아직 시작되지 않았습니다.(한명 기다려야 되서 한번은 뜸)');
+      return;
     }
 
     // 검증: 게임 세션에 유저가 존재하는가?
     const gameSession = this.users[user.id];
-    if (!gameSession) return '유저를 찾을 수 없습니다';
+    if (!gameSession) {
+      console.error('유저를 찾을 수 없습니다');
+      return;
+    }
 
     // 몬스터 레벨 증가 로직(20초마다 monsterLevel 1씩 증가)
     if (this.monsterLevelTime++ >= 20) {
