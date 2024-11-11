@@ -49,6 +49,7 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     // monster 클래스 내부에서 damage 입으면 방어력 빼는 계산을 할 것.
     const power = tower.getPower();
     monster.takeDamage(power);
+    if (!monster.isAlive) game.users[userId].score += 10;
 
     // 내타워가 어떤 몬스터를 공격했는지 상대방에게 알려야함.
     // createEnemyTowerAttackNotification()

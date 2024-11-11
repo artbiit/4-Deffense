@@ -47,6 +47,7 @@ class Game {
       towers: { length: 0 },
       baseHp: bases.data[0].maxHp,
       gold: 10000,
+      score: 0,
     };
 
     gamesJoinedbyUsers.set(user, this);
@@ -229,18 +230,20 @@ class Game {
     }
 
     const bases = getGameAsset(ASSET_TYPE.BASE);
-    const user = gameUser.user;
+    //const user = gameUser.user;
     return {
       gold: gameUser.gold,
       base: {
         hp: bases.data[0].maxHp,
         maxHp: bases.data[0].maxHp,
       },
-      highScore: user.bestScore,
+      //highScore: user.bestScore,
+      highScore: gameUser.bestScore,
       towers: [],
       monsters: [],
       monsterLevel: this.monsterLevel,
-      score: 0,
+      //score: 0,
+      score: gameUser.score,
       monsterPath: this.#monsterPath,
       basePosition: this.#basePosition,
     };
@@ -256,7 +259,7 @@ class Game {
       userGold: gameUser.gold,
       baseHp: gameUser.baseHp,
       monsterLevel: this.monsterLevel,
-      score: 0,
+      score: gameUser.score,
     };
   };
 }
