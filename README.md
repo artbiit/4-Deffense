@@ -171,14 +171,14 @@
 
 ### 패킷 명세서
 
-![alt text](image-1.png)
-![alt text](image-2.png)
+![alt text](./docs/readme/image-1.png)
+![alt text](./docs/readme/image-2.png)
 
 ### ERD
 
 #### User Data - MySQL
 
-![alt text](image-3.png)
+![alt text](./docs/readme/image-3.png)
 
 ### Game Data - JSON
 
