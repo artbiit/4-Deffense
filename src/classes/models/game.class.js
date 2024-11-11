@@ -214,6 +214,10 @@ class Game {
       // * 상대에게 게임 오버 알림
       const opponentGameOverNotification = createGameOverNotification(true);
       opponent.user.socket.write(opponentGameOverNotification);
+
+      // * 게임 세션에서 삭제
+      this.intervalManager.removePlayer(gameUser.user.id);
+      this.intervalManager.removePlayer(opponent.user.id);
     }
     return gameUser.baseHp;
   }
