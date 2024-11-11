@@ -170,6 +170,12 @@
 
 ## 트러블 슈팅
 
+- [C2S전투알림 패킷에 타워ID가 누락되던 오류 해결](./docs/troubleshootings/missingFieldsTowerId.md)
+- [적 타워설치 알림을 보낼때 상대방 유저 객체에 접근하지 못하는 오류 수정
+  ](./docs//troubleshootings/opponentUser.md)
+- [몬스터가 길을 따라서 이동하지 않고 시작하자마자 위 또는 아래로 일직선으로 이동하다가 맵을 이탈하는 오류 해결](./docs/troubleshootings/monsterAscension.md)
+- [경로를 정상적으로 줘도 몬스터가 이상하게 움직이는 현상 해결](./docs/troubleshootings/monsterCollision.md)
+
 ### 패킷 명세서
 
 ![alt text](./docs/readme/image-1.png)
