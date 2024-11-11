@@ -16,10 +16,8 @@ import {
   MONSTER_SPAWN_INTERVAL,
   NUM_SYNC_PER_LEVEL,
   SYNC_INTERVAL,
-  SPAWNS_PER_LEVEL,
 } from '../../constants/game.js';
 import { updateUserBestScoreById } from '../../db/user/user.db.js';
-
 
 // import {
 //   createLocationPacket,
@@ -172,7 +170,6 @@ class Game {
   }
 
   monsterLevelIncrease() {
-
     if (--this.numSyncUntilNextLevel <= 0) {
       this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
       this.monsterLevel++;
