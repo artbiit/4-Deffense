@@ -45,6 +45,11 @@ class Game {
     this.monsterSpawnInterval = MONSTER_SPAWN_INTERVAL;
   }
 
+  startGame() {
+    this.state = 'in_progress';
+    matchSuccessNotification(this);
+  }
+
   addUser(user) {
     if (this.users.length >= GAME_MAX_PLAYER) {
       throw new Error('Game session is full');
@@ -72,26 +77,6 @@ class Game {
     }
   }
 
-  monsterLevelIncrease() {
-    if (--this.spawnsUntilNextLevel <= 0) {
-      this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
-      this.monsterLevel++;
-    }
-  }
-
-  stateSync(user) {
-    if (this.state != 'in_progress') {
-      return;
-    }
-    const data = this.getSyncData(user.id);
-    const buffer = stateSyncNotification(data, user);
-    user.socket.write(buffer);
-  }
-
-  getUser(userId) {
-    return this.users[userId].user;
-  }
-
   removeUser(userId) {
     if (this.users.length == 0) {
       return;
@@ -106,6 +91,10 @@ class Game {
     if (this.users.length < GAME_MAX_PLAYER) {
       this.state = 'waiting';
     }
+  }
+
+  getUser(userId) {
+    return this.users[userId].user;
   }
 
   /**
@@ -129,6 +118,41 @@ class Game {
     return null;
   }
 
+  // 유저의 몬스터 추가
+  addMonster(userId, monsterNumber) {
+    //생성된 순서대로 번호를 부여하면 서로 겹칠일 없음.
+    this.#monsterCount++;
+    const monster = new Monster(this.#monsterCount, monsterNumber, this.monsterLevel);
+    const monsters = this.users[userId].monsters;
+    monsters[this.#monsterCount] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
+
+    this.monsterLevelIncrease();
+
+    //이 유저가아닌 상대 유저한테 noti해야함
+    return monster.id;
+  }
+
+  getMonster(userId, monsterId) {
+    return this.users[userId].monsters[monsterId];
+  }
+
+  /**
+   * 유저가 설치한 타워를 해당 게임의 타워목록에 추가하는 함수
+   * @param {string} userId 타워를 설치한 유저의 ID
+   * @param {{x: Number, y: Number}} coords 설치할 좌표
+   */
+  addTower(userId, coords) {
+    this.#towerCount++;
+    const tower = new Tower(this.#towerCount, coords);
+    const towers = this.users[userId].towers;
+    towers[this.#towerCount] = tower;
+    return tower;
+  }
+
+  getTower(userId, towerId) {
+    return this.users[userId].towers[towerId];
+  }
+
   updateScore(userId, deltaScore) {
     const userStats = this.users[userId];
     const user = userStats.user;
@@ -146,53 +170,11 @@ class Game {
     return (this.users[userId].gold += deltaGold);
   }
 
-  /**
-   * 유저가 설치한 타워를 해당 게임의 타워목록에 추가하는 함수
-   * @param {string} userId 타워를 설치한 유저의 ID
-   * @param {{x: Number, y: Number}} coords 설치할 좌표
-   */
-  addTower(userId, coords) {
-    this.#towerCount++;
-    const tower = new Tower(this.#towerCount, coords);
-    const towers = this.users[userId].towers;
-    towers[this.#towerCount] = tower;
-    return tower;
-  }
-
-  getMaxLatency() {
-    let maxLatency = 0;
-    this.users.forEach((user) => {
-      maxLatency = Math.max(maxLatency, user.latency);
-    });
-    return maxLatency;
-  }
-
-  getTower(userId, towerId) {
-    return this.users[userId].towers[towerId];
-  }
-  getMonster(userId, monsterId) {
-    return this.users[userId].monsters[monsterId];
-  }
-
-  startGame() {
-    this.state = 'in_progress';
-    matchSuccessNotification(this);
-  }
-
-  getAllLocation() {}
-
-  // 유저의 몬스터 추가
-  addMonster(userId, monsterNumber) {
-    //생성된 순서대로 번호를 부여하면 서로 겹칠일 없음.
-    this.#monsterCount++;
-    const monster = new Monster(this.#monsterCount, monsterNumber, this.monsterLevel);
-    const monsters = this.users[userId].monsters;
-    monsters[this.#monsterCount] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
-
-    this.monsterLevelIncrease();
-
-    //이 유저가아닌 상대 유저한테 noti해야함
-    return monster.id;
+  monsterLevelIncrease() {
+    if (--this.spawnsUntilNextLevel <= 0) {
+      this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
+      this.monsterLevel++;
+    }
   }
 
   baseDamage(userId, damage) {
@@ -235,6 +217,65 @@ class Game {
     }
     return gameUser.baseHp;
   }
+
+  stateSync(user) {
+    if (this.state != 'in_progress') {
+      return;
+    }
+    const data = this.getSyncData(user.id);
+    const buffer = stateSyncNotification(data, user);
+    user.socket.write(buffer);
+  }
+
+  getPlayerData = (userId) => {
+    const gameUser = this.users[userId];
+    if (!gameUser) {
+      return null;
+    }
+
+    const bases = getGameAsset(ASSET_TYPE.BASE);
+    //const user = gameUser.user;
+    return {
+      gold: gameUser.gold,
+      base: {
+        hp: bases.data[0].maxHp,
+        maxHp: bases.data[0].maxHp,
+      },
+      //highScore: user.bestScore,
+      highScore: gameUser.bestScore,
+      towers: [],
+      monsters: [],
+      monsterLevel: this.monsterLevel,
+      //score: 0,
+      score: gameUser.score,
+      monsterPath: this.#monsterPath,
+      basePosition: this.#basePosition,
+    };
+  };
+
+  getSyncData = (userId) => {
+    const gameUser = this.users[userId];
+    if (!gameUser) {
+      return null;
+    }
+
+    return {
+      userGold: gameUser.gold,
+      baseHp: gameUser.baseHp,
+      monsterLevel: this.monsterLevel,
+      score: gameUser.score,
+    };
+  };
+
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      maxLatency = Math.max(maxLatency, user.latency);
+    });
+    return maxLatency;
+  }
+
+  getAllLocation() {}
 
   #generatePath = () => {
     const path = [];
@@ -310,46 +351,6 @@ class Game {
 
     // this.#monsterPath = path;
     // this.#basePosition = basePos;
-  };
-
-  getPlayerData = (userId) => {
-    const gameUser = this.users[userId];
-    if (!gameUser) {
-      return null;
-    }
-
-    const bases = getGameAsset(ASSET_TYPE.BASE);
-    //const user = gameUser.user;
-    return {
-      gold: gameUser.gold,
-      base: {
-        hp: bases.data[0].maxHp,
-        maxHp: bases.data[0].maxHp,
-      },
-      //highScore: user.bestScore,
-      highScore: gameUser.bestScore,
-      towers: [],
-      monsters: [],
-      monsterLevel: this.monsterLevel,
-      //score: 0,
-      score: gameUser.score,
-      monsterPath: this.#monsterPath,
-      basePosition: this.#basePosition,
-    };
-  };
-
-  getSyncData = (userId) => {
-    const gameUser = this.users[userId];
-    if (!gameUser) {
-      return null;
-    }
-
-    return {
-      userGold: gameUser.gold,
-      baseHp: gameUser.baseHp,
-      monsterLevel: this.monsterLevel,
-      score: gameUser.score,
-    };
   };
 }
 
