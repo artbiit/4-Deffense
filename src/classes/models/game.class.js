@@ -11,6 +11,7 @@ import {
   createUpdateBaseHpNotification,
 } from '../../utils/notification/base.notification.js';
 import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
+import { getGameSessionByUserId } from '../../session/game.session.js';
 
 // import {
 //   createLocationPacket,
@@ -59,8 +60,16 @@ class Game {
     gamesJoinedbyUsers.set(user, this);
 
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
-    if (this.users.length == GAME_MAX_PLAYER) {
+    if (this.users.length === GAME_MAX_PLAYER) {
       this.intervalManager.monsterLevelInterval(user.id, this.stateSync.bind(this, user), 1000);
+      const game = getGameSessionByUserId(user.id);
+      const opponentUser = game.getOpponent(user.id).user;
+      this.intervalManager.monsterLevelInterval(
+        opponentUser.id,
+        this.stateSync.bind(this, opponentUser),
+        1000,
+      );
+
       setTimeout(() => {
         this.startGame();
       }, 1000);
