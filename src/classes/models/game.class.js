@@ -71,11 +71,6 @@ class Game {
 
     this.intervalManager.addPlayer(user.id, () => this.stateSync(user), SYNC_INTERVAL);
     if (this.users.length == GAME_MAX_PLAYER) {
-      this.intervalManager.monsterLevelInterval(
-        user.id,
-        this.stateSync.bind(this, user),
-        SYNC_INTERVAL,
-      );
       setTimeout(() => {
         this.startGame();
       }, 1000);
