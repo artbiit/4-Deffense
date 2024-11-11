@@ -11,7 +11,12 @@ import {
   createUpdateBaseHpNotification,
 } from '../../utils/notification/base.notification.js';
 import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
-import { INITIAL_GOLD, MONSTER_SPAWN_INTERVAL, SYNC_INTERVAL } from '../../constants/game.js';
+import {
+  INITIAL_GOLD,
+  MONSTER_SPAWN_INTERVAL,
+  SPAWNS_PER_LEVEL,
+  SYNC_INTERVAL,
+} from '../../constants/game.js';
 
 // import {
 //   createLocationPacket,
@@ -35,7 +40,7 @@ class Game {
 
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
-    this.monsterLevelTime = 0;
+    this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
     this.state = 'waiting'; // 'waiting', 'in_progress'
     this.monsterSpawnInterval = MONSTER_SPAWN_INTERVAL;
   }
@@ -68,8 +73,8 @@ class Game {
   }
 
   monsterLevelIncrease() {
-    if (this.monsterLevelTime++ >= 20) {
-      this.monsterLevelTime = 0;
+    if (--this.spawnsUntilNextLevel <= 0) {
+      this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
       this.monsterLevel++;
     }
   }
@@ -78,7 +83,6 @@ class Game {
     if (this.state != 'in_progress') {
       return;
     }
-    this.monsterLevelIncrease();
     const data = this.getSyncData(user.id);
     const buffer = stateSyncNotification(data, user);
     user.socket.write(buffer);
@@ -184,6 +188,9 @@ class Game {
     const monster = new Monster(this.#monsterCount, monsterNumber, this.monsterLevel);
     const monsters = this.users[userId].monsters;
     monsters[this.#monsterCount] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
+
+    this.monsterLevelIncrease();
+
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
   }
