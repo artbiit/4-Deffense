@@ -159,57 +159,79 @@ class Game {
   }
 
   #generatePath = () => {
-    const path = [
-      { x: 0, y: 350 },
-      { x: 1370, y: 350 },
-    ];
+    const path = [];
+
+    path.push({ x: 0, y: 200 });
+    path.push({ x: 200, y: 200 });
+    path.push({ x: 200, y: 300 });
+    path.push({ x: 100, y: 300 });
+    path.push({ x: 100, y: 400 });
+    path.push({ x: 300, y: 400 });
+    path.push({ x: 300, y: 200 });
+    path.push({ x: 400, y: 200 });
+    path.push({ x: 400, y: 400 });
+    path.push({ x: 600, y: 400 });
+    path.push({ x: 600, y: 300 });
+    path.push({ x: 500, y: 300 });
+    path.push({ x: 500, y: 200 });
+    path.push({ x: 700, y: 200 });
+    path.push({ x: 700, y: 400 });
+    path.push({ x: 1100, y: 400 });
+    path.push({ x: 1100, y: 300 });
+    path.push({ x: 800, y: 300 });
+    path.push({ x: 800, y: 200 });
+    path.push({ x: 1200, y: 200 });
+    path.push({ x: 1200, y: 350 });
+    path.push({ x: 1370, y: 350 });
+
     this.#monsterPath = path;
     this.#basePosition = { x: 1370, y: 350 };
     return;
-    const pathCount = 20;
-    const maxX = 1370;
 
-    const yPosRange = { min: 205.0, max: 400.0 };
-    const xStep = maxX / pathCount;
-    const minVerticalDistance = 100;
-    const minHorizontalDistance = 100;
+    // const pathCount = 20;
+    // const maxX = 1370;
 
-    let isVertical = true;
-    let prevX = 0;
-    let prevY = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
+    // const yPosRange = { min: 205.0, max: 400.0 };
+    // const xStep = maxX / pathCount;
+    // const minVerticalDistance = 100;
+    // const minHorizontalDistance = 100;
 
-    for (let i = 0; i < pathCount - 1; i++) {
-      let x, y;
-      if (isVertical) {
-        x = prevX;
-        let yCandidate;
-        do {
-          yCandidate = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
-        } while (Math.abs(yCandidate - prevY) < minVerticalDistance);
-        y = yCandidate;
-      } else {
-        let xCandidate;
-        do {
-          xCandidate = Math.floor(i * xStep + Math.random() * xStep);
-        } while (Math.abs(xCandidate - prevX) < minHorizontalDistance);
-        x = xCandidate;
-        y = prevY;
-      }
-      path.push({ x, y });
-      prevX = x;
-      prevY = y;
-      isVertical = !isVertical;
-    }
+    // let isVertical = true;
+    // let prevX = 0;
+    // let prevY = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
 
-    // 마지막 경로는 기지 좌표로 이어지도록 설정
-    const basePos = {
-      x: maxX,
-      y: prevY,
-    };
-    path.push(basePos);
+    // for (let i = 0; i < pathCount - 1; i++) {
+    //   let x, y;
+    //   if (isVertical) {
+    //     x = prevX;
+    //     let yCandidate;
+    //     do {
+    //       yCandidate = Math.floor(Math.random() * (yPosRange.max - yPosRange.min) + yPosRange.min);
+    //     } while (Math.abs(yCandidate - prevY) < minVerticalDistance);
+    //     y = yCandidate;
+    //   } else {
+    //     let xCandidate;
+    //     do {
+    //       xCandidate = Math.floor(i * xStep + Math.random() * xStep);
+    //     } while (Math.abs(xCandidate - prevX) < minHorizontalDistance);
+    //     x = xCandidate;
+    //     y = prevY;
+    //   }
+    //   path.push({ x, y });
+    //   prevX = x;
+    //   prevY = y;
+    //   isVertical = !isVertical;
+    // }
 
-    this.#monsterPath = path;
-    this.#basePosition = basePos;
+    // // 마지막 경로는 기지 좌표로 이어지도록 설정
+    // const basePos = {
+    //   x: maxX,
+    //   y: prevY,
+    // };
+    // path.push(basePos);
+
+    // this.#monsterPath = path;
+    // this.#basePosition = basePos;
   };
 
   getPlayerData = (userId) => {
