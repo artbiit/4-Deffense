@@ -14,10 +14,12 @@ import { stateSyncNotification } from '../../utils/notification/stateSync.notifi
 import {
   INITIAL_GOLD,
   MONSTER_SPAWN_INTERVAL,
-  SPAWNS_PER_LEVEL,
+  NUM_SYNC_PER_LEVEL,
   SYNC_INTERVAL,
+  SPAWNS_PER_LEVEL,
 } from '../../constants/game.js';
 import { updateUserBestScoreById } from '../../db/user/user.db.js';
+
 
 // import {
 //   createLocationPacket,
@@ -41,9 +43,9 @@ class Game {
 
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
-    this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
+    this.monsterspawnInterval = MONSTER_SPAWN_INTERVAL;
     this.state = 'waiting'; // 'waiting', 'in_progress'
-    this.monsterSpawnInterval = MONSTER_SPAWN_INTERVAL;
+    this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
   }
 
   startGame() {
@@ -127,8 +129,6 @@ class Game {
     const monsters = this.users[userId].monsters;
     monsters[this.#monsterCount] = monster; // 해당 유저의 몬스터 목록에 몬스터 추가
 
-    this.monsterLevelIncrease();
-
     //이 유저가아닌 상대 유저한테 noti해야함
     return monster.id;
   }
@@ -172,8 +172,9 @@ class Game {
   }
 
   monsterLevelIncrease() {
-    if (--this.spawnsUntilNextLevel <= 0) {
-      this.spawnsUntilNextLevel = SPAWNS_PER_LEVEL * 2; // 양쪽 플레이어를 모두 카운트하므로 2배
+
+    if (--this.numSyncUntilNextLevel <= 0) {
+      this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
       this.monsterLevel++;
     }
   }
@@ -231,10 +232,31 @@ class Game {
   }
 
   stateSync(user) {
+    // 검증: 게임이 시작했는가?(조건 변경 필요)
     if (this.state != 'in_progress') {
+      console.error('게임이 아직 시작되지 않았습니다.(한명 기다려야 되서 한번은 뜸)');
       return;
     }
-    const data = this.getSyncData(user.id);
+
+    // 검증: 게임 세션에 유저가 존재하는가?
+    const gameSession = this.users[user.id];
+    if (!gameSession) {
+      console.error('유저를 찾을 수 없습니다');
+      return;
+    }
+
+    // 몬스터 레벨 증가 로직(20초마다 monsterLevel 1씩 증가)
+    this.monsterLevelIncrease();
+
+    // 송신 데이터
+    const data = {
+      userGold: gameSession.gold,
+      baseHp: gameSession.baseHp,
+      monsterLevel: this.monsterLevel,
+      score: gameSession.score,
+    };
+
+    // 송신
     const buffer = stateSyncNotification(data, user);
     user.socket.write(buffer);
   }
