@@ -11,7 +11,7 @@ import {
   createUpdateBaseHpNotification,
 } from '../../utils/notification/base.notification.js';
 import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
-import { INITIAL_GOLD } from '../../constants/game.js';
+import { INITIAL_GOLD, SYNC_INTERVAL } from '../../constants/game.js';
 
 // import {
 //   createLocationPacket,
@@ -59,11 +59,11 @@ class Game {
 
     gamesJoinedbyUsers.set(user, this);
 
-    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), this.monsterSpawnInterval);
+    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), SYNC_INTERVAL);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
-      }, this.monsterSpawnInterval);
+      }, SYNC_INTERVAL);
     }
   }
 
