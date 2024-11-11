@@ -57,28 +57,40 @@ class Game {
     };
 
     gamesJoinedbyUsers.set(user, this);
-
-    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), this.monsterSpawnInterval);
+    //Game.intervalManager.monsterLevelInterval(user.id, Game.stateSync(user), 1000);
+    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
-      }, this.monsterSpawnInterval);
-    }
-  }
-
-  monsterLevelIncrease() {
-    if (this.monsterLevelTime++ >= 20) {
-      this.monsterLevelTime = 0;
-      this.monsterLevel++;
+      }, 1000);
     }
   }
 
   stateSync(user) {
+    // 검증: 게임이 시작했는가?(조건 변경 필요)
     if (this.state != 'in_progress') {
-      return;
+      return '게임이 아직 시작되지 않았습니다.';
     }
-    this.monsterLevelIncrease();
-    const data = this.getSyncData(user.id);
+
+    // 검증: 게임 세션에 유저가 존재하는가?
+    const gameSession = this.users[user.id];
+    if (!gameSession) return '유저를 찾을 수 없습니다';
+
+    // 몬스터 레벨 증가 로직(20초마다 monsterLevel 1씩 증가)
+    if (this.monsterLevelTime++ >= 20) {
+      this.monsterLevelTime = 0;
+      this.monsterLevel++;
+    }
+
+    // 송신 데이터
+    const data = {
+      userGold: gameSession.gold,
+      baseHp: gameSession.baseHp,
+      monsterLevel: this.monsterLevel,
+      score: gameSession.score,
+    };
+
+    // 송신
     const buffer = stateSyncNotification(data, user);
     user.socket.write(buffer);
   }
@@ -327,20 +339,6 @@ class Game {
       score: gameUser.score,
       monsterPath: this.#monsterPath,
       basePosition: this.#basePosition,
-    };
-  };
-
-  getSyncData = (userId) => {
-    const gameUser = this.users[userId];
-    if (!gameUser) {
-      return null;
-    }
-
-    return {
-      userGold: gameUser.gold,
-      baseHp: gameUser.baseHp,
-      monsterLevel: this.monsterLevel,
-      score: gameUser.score,
     };
   };
 }
