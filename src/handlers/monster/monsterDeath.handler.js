@@ -32,7 +32,7 @@ const monsterDeathHandler = ({ socket, payload }) => {
 
     // 검증: 게임이 진행중임
     const gameState = gameSession.state;
-    if (gameState != 'in_progess') {
+    if (gameState != 'in_progress') {
       throw new CustomError(ErrorCodes.GAME_NOT_IN_PROGRESS, `진행중인 게임이 아닙니다.`);
     }
 

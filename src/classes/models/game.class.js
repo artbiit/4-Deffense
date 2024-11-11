@@ -159,8 +159,13 @@ class Game {
   }
 
   #generatePath = () => {
-    const path = [];
-
+    const path = [
+      { x: 0, y: 350 },
+      { x: 1370, y: 350 },
+    ];
+    this.#monsterPath = path;
+    this.#basePosition = { x: 1370, y: 350 };
+    return;
     const pathCount = 20;
     const maxX = 1370;
 
