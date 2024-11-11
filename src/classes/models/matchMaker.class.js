@@ -14,6 +14,7 @@ import { addGameSession } from '../../session/game.session.js';
 const { REDIS_MATCH_REQUEST_CHANNEL } = configs;
 
 class MatchMaker {
+  #isMatching = false;
   constructor() {}
 
   async init() {
@@ -22,12 +23,18 @@ class MatchMaker {
     redis.on('message', async (channel, message) => {
       if (channel === REDIS_MATCH_REQUEST_CHANNEL) {
         await this.#matchMaking();
+        this.#isMatching = false;
       }
     });
     logger.info('MatchMaker initialized');
   }
 
   #matchMaking = async () => {
+    if (this.#isMatching) {
+      return;
+    }
+    this.#isMatching = true;
+
     let queueCount = await getQueueCount();
     //1명이면 매칭이 불가능함
     if (queueCount < 2) {
@@ -40,8 +47,8 @@ class MatchMaker {
     }
 
     try {
-      let range = 50;
-      let tryCount = 0;
+      let range = 1000;
+      let tryCount = 1;
       while (true) {
         const user = getUserById(userByQueue.userId);
 
@@ -85,10 +92,10 @@ class MatchMaker {
           }
         }
         //점진적 범위 증가
-        range = 50 + tryCount++ * tryCount * 100;
+        range = 1000 * ++tryCount;
         await new Promise((resolve) => setTimeout(resolve, 1000));
         queueCount = await getQueueCount();
-        if (queueCount < 2) {
+        if (queueCount < 1) {
           logger.info(`MatchMaker. Stop[${tryCount}] : ${queueCount}`);
           break;
         }
