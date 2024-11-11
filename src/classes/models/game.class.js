@@ -57,9 +57,10 @@ class Game {
     };
 
     gamesJoinedbyUsers.set(user, this);
-    //Game.intervalManager.monsterLevelInterval(user.id, Game.stateSync(user), 1000);
+
     this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
+      this.intervalManager.monsterLevelInterval(user.id, this.stateSync(user), 1000);
       setTimeout(() => {
         this.startGame();
       }, 1000);
