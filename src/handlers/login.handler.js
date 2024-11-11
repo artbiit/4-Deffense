@@ -2,12 +2,24 @@ import logger from '../utils/logger.js';
 import jwt from 'jsonwebtoken';
 import configs from '../configs/configs.js';
 import { GlobalFailCode } from '../constants/handlerIds.js';
-import { cacheUserToken, findUserByIdPw } from '../db/user/user.db.js';
+import { cacheUserToken, findUserByIdPw, getUserToken } from '../db/user/user.db.js';
 import Result from './result.js';
 import { addUser } from '../session/user.session.js';
 
 // 환경 변수에서 설정 불러오기
 const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE, PacketType } = configs;
+
+function isTokenValid(token) {
+  try {
+    jwt.verify(token, JWT_SECRET);
+    return true; // 토큰이 유효하고 만료되지 않음
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return false; // 토큰이 만료됨
+    }
+    return false; // 토큰이 유효하지 않음
+  }
+}
 
 /***
  * - 로그인 요청(request) 함수
@@ -31,6 +43,13 @@ export const loginRequestHandler = async ({ socket, payload }) => {
     // 아이디와 비밀번호 기반으로 유저 찾기
     const userByDB = await findUserByIdPw(id, password);
     if (userByDB) {
+      const cachedToken = await getUserToken(userByDB.seqNo);
+      if (cachedToken && isTokenValid(cachedToken)) {
+        message = '이미 로그인되어 있는 계정입니다.';
+        failCode = GlobalFailCode.AUTHENTICATION_FAILED;
+        throw new Error(message);
+      }
+
       // 토큰 생성
       token = jwt.sign({ userId: id, seqNo: userByDB.seqNo }, JWT_SECRET, {
         expiresIn: JWT_EXPIRES_IN,
@@ -53,8 +72,8 @@ export const loginRequestHandler = async ({ socket, payload }) => {
     }
   } catch (error) {
     success = false;
-    message = '로그인 과정 중 문제가 발생했습니다.';
-    failCode = GlobalFailCode.UNKNOWN_ERROR;
+    message = message || '로그인 과정 중 문제가 발생했습니다.';
+    failCode = failCode || GlobalFailCode.UNKNOWN_ERROR;
     logger.error(`loginRequestHandler Error: ${error.message}`);
   }
 

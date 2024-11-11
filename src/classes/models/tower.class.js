@@ -1,4 +1,4 @@
-import { getRandomGameAsset } from '../../utils/asset/getAssets.js';
+import { getGameAssetById, getRandomGameAsset } from '../../utils/asset/getAssets.js';
 import { ASSET_TYPE } from '../../constants/assets.js';
 
 class Tower {
@@ -7,7 +7,8 @@ class Tower {
    * @param {{x: Number, y: Number}} coords 설치할 좌표
    */
   constructor(instanceId, coords) {
-    const towerData = getRandomGameAsset(ASSET_TYPE.TOWER);
+    const towerData = getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001');
+    // const towerData = getRandomGameAsset(ASSET_TYPE.TOWER);
     this.assetId = towerData.id;
     this.instanceId = instanceId;
 
