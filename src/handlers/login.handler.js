@@ -44,11 +44,11 @@ export const loginRequestHandler = async ({ socket, payload }) => {
     const userByDB = await findUserByIdPw(id, password);
     if (userByDB) {
       const cachedToken = await getUserToken(userByDB.seqNo);
-      if (cachedToken && isTokenValid(cachedToken)) {
-        message = '이미 로그인되어 있는 계정입니다.';
-        failCode = GlobalFailCode.AUTHENTICATION_FAILED;
-        throw new Error(message);
-      }
+      // if (cachedToken && isTokenValid(cachedToken)) {
+      //   message = '이미 로그인되어 있는 계정입니다.';
+      //   failCode = GlobalFailCode.AUTHENTICATION_FAILED;
+      //   throw new Error(message);
+      // }
 
       // 토큰 생성
       token = jwt.sign({ userId: id, seqNo: userByDB.seqNo }, JWT_SECRET, {
