@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "data": [
     {
-      "maxHp": 500
+      "maxHp": 100
     }
   ]
 }

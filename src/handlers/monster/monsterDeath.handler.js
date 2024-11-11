@@ -44,7 +44,8 @@ const monsterDeathHandler = ({ socket, payload }) => {
 
     // 검증: 몬스터가 실제로 사망함
     if (monster.isAlive) {
-      throw new CustomError(ErrorCodes.MONSTER_NOT_DEAD, '몬스터가 죽지 않았습니다.');
+      // 클라이언트가 변조했다는걸 잡아내도 패킷구조상 클라이언트를 막을 수 있는 방법이 없다...
+      return;
     }
 
     // 검증: 상대방 유저가 존재함

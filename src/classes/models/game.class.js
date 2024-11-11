@@ -6,6 +6,10 @@ import { getUserById } from '../../session/user.session.js';
 import Tower from './tower.class.js';
 import { getGameAsset } from '../../utils/asset/getAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
+import {
+  createGameOverNotification,
+  createUpdateBaseHpNotification,
+} from '../../utils/notification/base.notification.js';
 
 // import {
 //   createLocationPacket,
@@ -151,10 +155,38 @@ class Game {
 
     gameUser.baseHp -= damage;
 
-    if (gameUser.baseHp <= 0) {
+    // * 유저의 변경된 기지 체력
+    const updatedBaseHp = gameUser.baseHp;
+
+    // * 내 기지 체력 변경 알림
+    const myUpdateBaseHpNotification = createUpdateBaseHpNotification(
+      false,
+      updatedBaseHp,
+      gameUser.user,
+    );
+    gameUser.user.socket.write(myUpdateBaseHpNotification);
+
+    // * 상대방에게 기지 체력 변경 알림
+    const opponent = this.getOpponent(userId);
+    const opponentUpdateBaseHpNotification = createUpdateBaseHpNotification(
+      true,
+      updatedBaseHp,
+      opponent.user,
+    );
+    opponent.user.socket.write(opponentUpdateBaseHpNotification);
+
+    if (updatedBaseHp <= 0) {
       gameUser.baseHp = 0;
       // 베이스 펑
       // 게임종료.
+
+      // * 나에게 게임 오버 알림
+      const myGameOverNotification = createGameOverNotification(false);
+      gameUser.user.socket.write(myGameOverNotification);
+
+      // * 상대에게 게임 오버 알림
+      const opponentGameOverNotification = createGameOverNotification(true);
+      opponent.user.socket.write(opponentGameOverNotification);
     }
   }
 
