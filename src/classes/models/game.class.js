@@ -9,6 +9,7 @@ import { matchSuccessNotification } from '../../utils/notification/match.notific
 import {
   createGameOverNotification,
   createUpdateBaseHpNotification,
+  stateSyncNotification,
 } from '../../utils/notification/base.notification.js';
 
 // import {
@@ -50,18 +51,27 @@ class Game {
       monsters: { length: 0 },
       towers: { length: 0 },
       baseHp: bases.data[0].maxHp,
-      gold: 0,
+      gold: 10000,
       score: 0,
     };
 
     gamesJoinedbyUsers.set(user, this);
 
-    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
+    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
       }, 1000);
     }
+  }
+
+  stateSync(user) {
+    if (this.state != 'in_progress') {
+      return;
+    }
+    const data = this.getSyncData(user.id);
+    const buffer = stateSyncNotification(data, user);
+    user.socket.write(buffer);
   }
 
   getUser(userId) {
@@ -206,6 +216,7 @@ class Game {
       const opponentGameOverNotification = createGameOverNotification(true);
       opponent.user.socket.write(opponentGameOverNotification);
     }
+    return gameUser.baseHp;
   }
 
   #generatePath = () => {
@@ -237,6 +248,7 @@ class Game {
     this.#monsterPath = path;
     this.#basePosition = { x: 1370, y: 350 };
     return;
+
 
     // const pathCount = 20;
     // const maxX = 1370;
@@ -305,6 +317,20 @@ class Game {
       score: 0,
       monsterPath: this.#monsterPath,
       basePosition: this.#basePosition,
+    };
+  };
+
+  getSyncData = (userId) => {
+    const gameUser = this.users[userId];
+    if (!gameUser) {
+      return null;
+    }
+
+    return {
+      userGold: gameUser.gold,
+      baseHp: gameUser.baseHp,
+      monsterLevel: this.monsterLevel,
+      score: 0,
     };
   };
 }
