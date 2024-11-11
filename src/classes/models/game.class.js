@@ -275,8 +275,6 @@ class Game {
     return maxLatency;
   }
 
-  getAllLocation() {}
-
   #generatePath = () => {
     const path = [];
 
