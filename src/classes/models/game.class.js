@@ -11,6 +11,7 @@ import {
   createUpdateBaseHpNotification,
 } from '../../utils/notification/base.notification.js';
 import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
+import { INITIAL_GOLD } from '../../constants/game.js';
 
 // import {
 //   createLocationPacket,
@@ -52,7 +53,7 @@ class Game {
       monsters: { length: 0 },
       towers: { length: 0 },
       baseHp: bases.data[0].maxHp,
-      gold: 10000,
+      gold: INITIAL_GOLD,
       score: 0,
     };
 
