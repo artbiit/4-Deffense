@@ -161,12 +161,12 @@ class Game {
   #generatePath = () => {
     const path = [];
 
-    const pathCount = 25;
+    const pathCount = 20;
     const maxX = 1370;
 
     const yPosRange = { min: 205.0, max: 400.0 };
     const xStep = maxX / pathCount;
-    const minVerticalDistance = 50;
+    const minVerticalDistance = 100;
     const minHorizontalDistance = 100;
 
     let isVertical = true;
