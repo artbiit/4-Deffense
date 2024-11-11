@@ -51,6 +51,7 @@ class Game {
       towers: { length: 0 },
       baseHp: bases.data[0].maxHp,
       gold: 0,
+      score: 0,
     };
 
     gamesJoinedbyUsers.set(user, this);
@@ -102,6 +103,23 @@ class Game {
     }
 
     return null;
+  }
+
+  updateScore(userId, deltaScore) {
+    const userStats = this.users[userId];
+    const user = userStats.user;
+
+    userStats.score += deltaScore;
+
+    // 베스트스코어 업데이트
+    if (userStats.score > user.bestScore) {
+      user.bestScore = userStats.score;
+    }
+    return userStats.score;
+  }
+
+  updateGold(userId, deltaGold) {
+    return (this.users[userId].gold += deltaGold);
   }
 
   /**
