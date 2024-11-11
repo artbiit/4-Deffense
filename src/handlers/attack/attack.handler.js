@@ -49,6 +49,7 @@ export const towerAttackRequestHandler = ({ socket, payload }) => {
     // monster 클래스 내부에서 damage 입으면 방어력 빼는 계산을 할 것.
     const power = tower.getPower();
     monster.takeDamage(power);
+    if (!monster.isAlive) game.users[userId].score += 10;
 
     // 내타워가 어떤 몬스터를 공격했는지 상대방에게 알려야함.
     // createEnemyTowerAttackNotification()
@@ -91,7 +92,7 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     // payload에 damage만 담아주기때문에 해당하는 몬스터를 찾을수가 없다.
 
     // 여기까지 몬스터가 base에게 대미지를 주었다.
-    console.log(`몬스터가 base에게 성공적으로 공격했습니다. 피해량 : ${damage}`);
+    //console.log(`몬스터가 base에게 성공적으로 공격했습니다. 피해량 : ${damage}`);
   } catch (error) {
     handleError(PacketType.MONSTER_ATTACK_BASE_REQUEST, error);
   }

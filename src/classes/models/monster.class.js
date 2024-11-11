@@ -51,7 +51,7 @@ class Monster {
     const actualDamage = Math.max(0, towerPower - this.defense);
     this.hp -= actualDamage;
 
-    console.log(`몬스터가 ${actualDamage} 만큼의 피해를 입었습니다.`);
+    //console.log(`몬스터가 ${actualDamage} 만큼의 피해를 입었습니다.`);
 
     if (this.hp <= 0) {
       this.hp = 0;

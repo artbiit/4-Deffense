@@ -34,6 +34,7 @@ class Game {
 
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
+    this.monsterLevelTime = 0;
     this.state = 'waiting'; // 'waiting', 'in_progress'
     this.monsterSpawnInterval = 1000;
   }
@@ -57,11 +58,18 @@ class Game {
 
     gamesJoinedbyUsers.set(user, this);
 
-    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), 1000);
+    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), this.monsterSpawnInterval);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
-      }, 1000);
+      }, this.monsterSpawnInterval);
+    }
+  }
+
+  monsterLevelIncrease() {
+    if (this.monsterLevelTime++ >= 20) {
+      this.monsterLevelTime = 0;
+      this.monsterLevel++;
     }
   }
 
@@ -69,6 +77,7 @@ class Game {
     if (this.state != 'in_progress') {
       return;
     }
+    this.monsterLevelIncrease();
     const data = this.getSyncData(user.id);
     const buffer = stateSyncNotification(data, user);
     user.socket.write(buffer);
@@ -302,18 +311,20 @@ class Game {
     }
 
     const bases = getGameAsset(ASSET_TYPE.BASE);
-    const user = gameUser.user;
+    //const user = gameUser.user;
     return {
       gold: gameUser.gold,
       base: {
         hp: bases.data[0].maxHp,
         maxHp: bases.data[0].maxHp,
       },
-      highScore: user.bestScore,
+      //highScore: user.bestScore,
+      highScore: gameUser.bestScore,
       towers: [],
       monsters: [],
       monsterLevel: this.monsterLevel,
-      score: 0,
+      //score: 0,
+      score: gameUser.score,
       monsterPath: this.#monsterPath,
       basePosition: this.#basePosition,
     };
@@ -329,7 +340,7 @@ class Game {
       userGold: gameUser.gold,
       baseHp: gameUser.baseHp,
       monsterLevel: this.monsterLevel,
-      score: 0,
+      score: gameUser.score,
     };
   };
 }
