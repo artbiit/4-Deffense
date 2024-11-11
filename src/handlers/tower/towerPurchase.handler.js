@@ -39,15 +39,9 @@ const towerPurchaseHandler = ({ socket, payload }) => {
     const tower = gameSession.addTower(user.id, { x, y });
 
     // INCOMPLETE: 골드가 충분한지 검증 필요
-    console.log('A user.gold: ', gameSession.users[user.id].gold);
     if (gameSession.users[user.id].gold < getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost) {
       throw new CustomError(ErrorCodes.NOT_ENOUGH_GOLD, '골드가 부족합니다.');
     } else gameSession.users[user.id].gold -= getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost;
-    console.log('B user.gold: ', gameSession.users[user.id].gold);
-    console.log(
-      "getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost: ",
-      getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost,
-    );
 
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id).user;

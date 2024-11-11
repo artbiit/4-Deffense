@@ -9,7 +9,6 @@ import makeNotification from './makeNotification.js';
  * @returns
  */
 export const createUpdateBaseHpNotification = (isOpponent, baseHp, user) => {
-  console.log('isOpponent, baseHp, userId: ', isOpponent, baseHp, user.id);
   const packetType = PacketType.UPDATE_BASE_HP_NOTIFICATION;
   const payload = { isOpponent, baseHp };
   return makeNotification(packetType, payload, user);

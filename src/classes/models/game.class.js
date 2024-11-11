@@ -252,11 +252,6 @@ class Game {
       return null;
     }
 
-    console.log('userId: ', userId);
-    console.log('gameUser.gold: ', gameUser.gold);
-    console.log('gameUser.baseHp: ', gameUser.baseHp);
-    console.log('gameUser.monsterLevel: ', this.monsterLevel);
-
     return {
       userGold: gameUser.gold,
       baseHp: gameUser.baseHp,
