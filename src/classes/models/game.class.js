@@ -11,7 +11,7 @@ import {
   createUpdateBaseHpNotification,
 } from '../../utils/notification/base.notification.js';
 import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
-import { INITIAL_GOLD, SYNC_INTERVAL } from '../../constants/game.js';
+import { INITIAL_GOLD, MONSTER_SPAWN_INTERVAL, SYNC_INTERVAL } from '../../constants/game.js';
 
 // import {
 //   createLocationPacket,
@@ -37,7 +37,7 @@ class Game {
     this.monsterLevel = 1;
     this.monsterLevelTime = 0;
     this.state = 'waiting'; // 'waiting', 'in_progress'
-    this.monsterSpawnInterval = 1000;
+    this.monsterSpawnInterval = MONSTER_SPAWN_INTERVAL;
   }
 
   addUser(user) {
