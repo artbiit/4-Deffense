@@ -9,8 +9,9 @@ import { PacketType } from '../../constants/header.js';
  * @returns {Buffer} 전송할 패킷
  */
 export const createEnemyMonsterDeathNotification = (user, monster) => {
-  const packetType = configs.PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION;
+  const packetType = PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION;
   const payload = { monsterId: monster.id };
+  console.log('payload: ', payload);
   return makeNotification(packetType, payload, user);
 };
 
