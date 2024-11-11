@@ -56,8 +56,8 @@ const monsterDeathHandler = ({ socket, payload }) => {
 
     // 몬스터 사망처리 및 플레이어 골드/점수 증가
     monster.isAlive = false;
-    gameSession.updateGold(MONSTER_KILL_GOLD);
-    gameSession.updateScore(MONSTER_KILL_SCORE);
+    gameSession.updateGold(user.id, MONSTER_KILL_GOLD);
+    gameSession.updateScore(user.id, MONSTER_KILL_SCORE);
   } catch (error) {
     handleError(PacketType.MONSTER_DEATH_NOTIFICATION, error);
   }
