@@ -6,7 +6,7 @@ import { getUserById } from '../../session/user.session.js';
 import Tower from './tower.class.js';
 import { getGameAsset } from '../../utils/asset/getAssets.js';
 import { matchSuccessNotification } from '../../utils/notification/match.notification.js';
-
+import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
 // import {
 //   createLocationPacket,
 //   gameStartNotification,
@@ -51,12 +51,21 @@ class Game {
 
     gamesJoinedbyUsers.set(user, this);
 
-    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
+    this.intervalManager.addPlayer(user.id, () => this.stateSync(user), 1000);
     if (this.users.length == GAME_MAX_PLAYER) {
       setTimeout(() => {
         this.startGame();
       }, 1000);
     }
+  }
+
+  stateSync(user) {
+    if (this.state != 'in_progress') {
+      return;
+    }
+    const data = this.getSyncData(user.id);
+    const buffer = stateSyncNotification(data, user);
+    user.socket.write(buffer);
   }
 
   getUser(userId) {

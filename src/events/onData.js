@@ -52,21 +52,6 @@ export const onData = (socket) => async (data) => {
             result.payload,
           );
           socket.write(response);
-
-          // 상태 동기화
-          const user = getUserBySocket(socket);
-          if (user) {
-            const gameSession = getGameSessionByUser(user);
-            if (gameSession) {
-              const opponent = gameSession.getOpponent(user.id).user;
-              createUpdateBaseHpNotification(true, gameSession.users[opponent.id].baseHp, user);
-              const stateSyncResponse = stateSyncNotification(
-                gameSession.getSyncData(user.id),
-                user,
-              );
-              socket.write(stateSyncResponse);
-            }
-          }
         }
       }
     } else {
