@@ -23,7 +23,7 @@
 
 ## 시연영상
 
-[![시연영상_YOUTUBE](./docs/readme/image.png)](https://youtu.be/Zs2deBwlfOc)
+[![시연영상_YOUTUBE](./docs/readme/image.png)](https://youtu.be/MPTPMrrznz8)
 
 ## 프로젝트 개요
 
