@@ -84,7 +84,7 @@ export const monsterAttackBaseRequestHandler = ({ socket, payload }) => {
     }
 
     // userId와 damage로 base에 damage준다.
-    game.baseDamage(userId, damage);
+    const baseHp = game.baseDamage(userId, damage);
 
     // 몬스터가 기지 공격하고 나면 클라이언트에서는 remove하고있다.
     // 이걸 서버로 전달해주지 않아서 서버도 자체적으로 공격하면 지우려 했는데,

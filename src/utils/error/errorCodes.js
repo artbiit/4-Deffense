@@ -16,6 +16,7 @@ export const ErrorCodes = {
   MONSTER_NOT_FOUND: 10014,
   MONSTER_NOT_DEAD: 10015,
   // 추가적인 에러 코드들
+  NOT_ENOUGH_GOLD: 10016,
 };
 
 export const ErrorNames = Object.fromEntries(

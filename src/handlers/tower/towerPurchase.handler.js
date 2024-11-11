@@ -6,6 +6,8 @@ import { handleError } from '../../utils/error/errorHandler.js';
 import configs from '../../configs/configs.js';
 import { createAddEnemyTowerNotification } from '../../utils/notification/tower.notification.js';
 import Result from '../result.js';
+import { getGameAssetById } from '../../utils/asset/getAssets.js';
+import { ASSET_TYPE } from '../../constants/assets.js';
 
 const { PacketType } = configs;
 
@@ -33,9 +35,19 @@ const towerPurchaseHandler = ({ socket, payload }) => {
 
     // INCOMPLETE: 게임이 진행중인지 검증 필요
     // INCOMPLETE: 타워 위치 (설치할 수 있는 곳인가? 다른 타워와 겹치는가?) 검증 필요
-    // INCOMPLETE: 골드가 충분한지 검증 필요
 
     const tower = gameSession.addTower(user.id, { x, y });
+
+    // INCOMPLETE: 골드가 충분한지 검증 필요
+    console.log('A user.gold: ', gameSession.users[user.id].gold);
+    if (gameSession.users[user.id].gold < getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost) {
+      throw new CustomError(ErrorCodes.NOT_ENOUGH_GOLD, '골드가 부족합니다.');
+    } else gameSession.users[user.id].gold -= getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost;
+    console.log('B user.gold: ', gameSession.users[user.id].gold);
+    console.log(
+      "getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost: ",
+      getGameAssetById(ASSET_TYPE.TOWER, 'TOW00001').Cost,
+    );
 
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id).user;

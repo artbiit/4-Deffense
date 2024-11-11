@@ -11,7 +11,7 @@
       "Range": 300,
       "Cooldown": 180,
       "Duration": 30,
-      "Cost": 3000,
+      "Cost": 100,
       "Extra": 1,
       "ExtraPerLv": 0.5
     },
@@ -24,7 +24,7 @@
       "Range": 400,
       "Cooldown": 300,
       "Duration": 0,
-      "Cost": 3000,
+      "Cost": 100,
       "Extra": 100,
       "ExtraPerLv": 0
     },
@@ -37,7 +37,7 @@
       "Range": 200,
       "Cooldown": 60,
       "Duration": 0,
-      "Cost": 3000,
+      "Cost": 100,
       "Extra": 3,
       "ExtraPerLv": 1
     },
@@ -50,7 +50,7 @@
       "Range": 300,
       "Cooldown": 120,
       "Duration": 0,
-      "Cost": 3000,
+      "Cost": 100,
       "Extra": 10,
       "ExtraPerLv": 1
     }

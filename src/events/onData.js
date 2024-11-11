@@ -4,6 +4,9 @@ import { getUserBySocket } from '../session/user.session.js';
 import { handleError } from '../utils/error/errorHandler.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { createResponse } from '../utils/response/createResponse.js';
+import { stateSyncNotification } from '../utils/notification/stateSync.notification.js';
+import { getGameSessionByUser } from '../session/game.session.js';
+import { createUpdateBaseHpNotification } from '../utils/notification/base.notification.js';
 
 const {
   PACKET_TYPE_LENGTH,
@@ -49,6 +52,21 @@ export const onData = (socket) => async (data) => {
             result.payload,
           );
           socket.write(response);
+
+          // 상태 동기화
+          const user = getUserBySocket(socket);
+          if (user) {
+            const gameSession = getGameSessionByUser(user);
+            if (gameSession) {
+              const opponent = gameSession.getOpponent(user.id).user;
+              createUpdateBaseHpNotification(true, gameSession.users[opponent.id].baseHp, user);
+              const stateSyncResponse = stateSyncNotification(
+                gameSession.getSyncData(user.id),
+                user,
+              );
+              socket.write(stateSyncResponse);
+            }
+          }
         }
       }
     } else {

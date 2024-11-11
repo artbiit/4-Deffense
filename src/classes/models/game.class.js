@@ -46,7 +46,7 @@ class Game {
       monsters: { length: 0 },
       towers: { length: 0 },
       baseHp: bases.data[0].maxHp,
-      gold: 0,
+      gold: 10000,
     };
 
     gamesJoinedbyUsers.set(user, this);
@@ -156,6 +156,7 @@ class Game {
       // 베이스 펑
       // 게임종료.
     }
+    return gameUser.baseHp;
   }
 
   #generatePath = () => {
@@ -165,7 +166,7 @@ class Game {
     ];
     this.#monsterPath = path;
     this.#basePosition = { x: 1370, y: 350 };
-    return;
+
     const pathCount = 20;
     const maxX = 1370;
 
@@ -233,6 +234,25 @@ class Game {
       score: 0,
       monsterPath: this.#monsterPath,
       basePosition: this.#basePosition,
+    };
+  };
+
+  getSyncData = (userId) => {
+    const gameUser = this.users[userId];
+    if (!gameUser) {
+      return null;
+    }
+
+    console.log('userId: ', userId);
+    console.log('gameUser.gold: ', gameUser.gold);
+    console.log('gameUser.baseHp: ', gameUser.baseHp);
+    console.log('gameUser.monsterLevel: ', this.monsterLevel);
+
+    return {
+      userGold: gameUser.gold,
+      baseHp: gameUser.baseHp,
+      monsterLevel: this.monsterLevel,
+      score: 0,
     };
   };
 }
