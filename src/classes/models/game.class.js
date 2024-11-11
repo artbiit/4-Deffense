@@ -9,8 +9,8 @@ import { matchSuccessNotification } from '../../utils/notification/match.notific
 import {
   createGameOverNotification,
   createUpdateBaseHpNotification,
-  stateSyncNotification,
 } from '../../utils/notification/base.notification.js';
+import { stateSyncNotification } from '../../utils/notification/stateSync.notification.js';
 
 // import {
 //   createLocationPacket,
@@ -248,7 +248,6 @@ class Game {
     this.#monsterPath = path;
     this.#basePosition = { x: 1370, y: 350 };
     return;
-
 
     // const pathCount = 20;
     // const maxX = 1370;
