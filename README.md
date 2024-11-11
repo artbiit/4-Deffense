@@ -49,6 +49,10 @@
 - [x] **커스텀 몬스터 이동경로**
 - [x] **유저정보 캐싱** - Redis
 
+### 서버 구성
+
+![alt text](./docs/readme/server_image.png)
+
 ### 프로젝트 구조
 
 ```
