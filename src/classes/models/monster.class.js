@@ -45,16 +45,16 @@ class Monster {
 
   // 데미지 받음
   takeDamage(towerPower) {
+    if (this.hp === 0) return;
+
     // 받은 데미지 값에서 몬스터의 방어력을 빼서 실제 피해량 계산(0이하로 떨어지면 사망)
     const actualDamage = Math.max(0, towerPower - this.defense);
     this.hp -= actualDamage;
 
     console.log(`몬스터가 ${actualDamage} 만큼의 피해를 입었습니다.`);
 
-    // 몬스터 체력이 0이하로 떨어지면 사망
     if (this.hp <= 0) {
       this.hp = 0;
-      this.isAlive = false;
     }
   }
 

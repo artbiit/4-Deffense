@@ -1,4 +1,5 @@
 import configs from '../../configs/configs.js';
+import { MONSTER_KILL_GOLD, MONSTER_KILL_SCORE } from '../../constants/game.js';
 import { getGameSessionByUser } from '../../session/game.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import CustomError from '../../utils/error/customError.js';
@@ -42,11 +43,6 @@ const monsterDeathHandler = ({ socket, payload }) => {
       throw new CustomError(ErrorCodes.MONSTER_NOT_FOUND, '몬스터를 찾을 수 없습니다.');
     }
 
-    // 검증: 몬스터가 실제로 사망함
-    if (monster.isAlive) {
-      throw new CustomError(ErrorCodes.MONSTER_NOT_DEAD, '몬스터가 죽지 않았습니다.');
-    }
-
     // 검증: 상대방 유저가 존재함
     const opponent = gameSession.getOpponent(user.id).user;
     const opponentSocket = opponent.socket;
@@ -57,6 +53,11 @@ const monsterDeathHandler = ({ socket, payload }) => {
     // 상대방에게 적 몬스터 처치 알림 패킷 전송
     const enemyTowerDeathNotification = createEnemyMonsterDeathNotification(opponent, monster);
     opponentSocket.write(enemyTowerDeathNotification);
+
+    // 몬스터 사망처리 및 플레이어 골드/점수 증가
+    monster.isAlive = false;
+    gameSession.updateGold(MONSTER_KILL_GOLD);
+    gameSession.updateScore(MONSTER_KILL_SCORE);
   } catch (error) {
     handleError(PacketType.MONSTER_DEATH_NOTIFICATION, error);
   }

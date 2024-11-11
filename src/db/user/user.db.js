@@ -43,3 +43,8 @@ export const unlinkUserToken = async (seqNo) => {
   const redis = await getRedis();
   return await redis.unlink(`user:${seqNo}:accessToken`);
 };
+
+export const getUserToken = async (seqNo) => {
+  const redis = await getRedis();
+  return await redis.get(`user:${seqNo}:accessToken`);
+};
