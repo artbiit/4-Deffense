@@ -11,7 +11,6 @@ import { PacketType } from '../../constants/header.js';
 export const createEnemyMonsterDeathNotification = (user, monster) => {
   const packetType = PacketType.ENEMY_MONSTER_DEATH_NOTIFICATION;
   const payload = { monsterId: monster.id };
-  console.log('payload: ', payload);
   return makeNotification(packetType, payload, user);
 };
 
