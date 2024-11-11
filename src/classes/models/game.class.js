@@ -40,7 +40,6 @@ class Game {
 
     this.intervalManager = new IntervalManager();
     this.monsterLevel = 1;
-    this.monsterLevelTime = 0;
     this.monsterspawnInterval = MONSTER_SPAWN_INTERVAL;
     this.state = 'waiting'; // 'waiting', 'in_progress'
     this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
