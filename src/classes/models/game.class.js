@@ -42,7 +42,7 @@ class Game {
     this.monsterLevel = 1;
     this.monsterspawnInterval = MONSTER_SPAWN_INTERVAL;
     this.state = 'waiting'; // 'waiting', 'in_progress'
-    this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
+    this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2; // 두 플레이어의 동기화를 모두 카운트하므로 2배
   }
 
   startGame() {
@@ -175,7 +175,7 @@ class Game {
 
   monsterLevelIncrease() {
     if (--this.numSyncUntilNextLevel <= 0) {
-      this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2;
+      this.numSyncUntilNextLevel = NUM_SYNC_PER_LEVEL * 2; // 두 플레이어의 동기화를 모두 카운트하므로 2배
       this.monsterLevel++;
     }
   }
