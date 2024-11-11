@@ -6,7 +6,7 @@
 
 ## 해결
 서버에서 길을 틀어 버리는 것 보단 클라이언트를 수정했습니다.
-Monster Layer를 추가하여 Monster 간 충돌이 불가하도록 설정했습니다.
+Monster의 전체 로직에 충돌과 관련된 것은 없고 트리거만 있는 것 같아서 Kinematic으로 전환했습니다.
 
 
 ![문제가 되었던 경로](monsterCollision.png)
