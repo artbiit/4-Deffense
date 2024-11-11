@@ -3,6 +3,7 @@
 ## Team 4 dollars 💵
 
 ![alt text](./docs/readme/image.png)
+![alt text](./docs/readme/image_.png)
 
 ## 팀원 소개
 
